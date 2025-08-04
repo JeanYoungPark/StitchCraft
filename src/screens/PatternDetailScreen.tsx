@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { databaseManager } from '../database/DatabaseManager';
 
 // Navigation types
 type PatternDetailParams = {
@@ -22,6 +24,7 @@ type PatternDetailParams = {
   description: string;
   hasImages?: boolean;
   hasPattern?: boolean;
+  fromBookmarks?: boolean;
 };
 
 type PatternDetailRouteProp = RouteProp<{PatternDetail: PatternDetailParams}, 'PatternDetail'>;
@@ -32,8 +35,10 @@ const PatternDetailScreen: React.FC = () => {
   const navigation = useNavigation();
   const route = useRoute<PatternDetailRouteProp>();
   const [currentSection, setCurrentSection] = useState<'materials' | 'guide' | 'video'>('video');
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const {
+    patternId,
     title,
     difficulty,
     duration,
@@ -43,7 +48,46 @@ const PatternDetailScreen: React.FC = () => {
     description,
     hasImages = false,
     hasPattern = false,
+    fromBookmarks = false,
   } = route.params;
+
+  useEffect(() => {
+    checkBookmarkStatus();
+  }, [patternId]);
+
+  const checkBookmarkStatus = async () => {
+    try {
+      const bookmarks = await databaseManager.getBookmarks();
+      const isPatternBookmarked = bookmarks.some(
+        bookmark => bookmark.itemType === 'pattern' && bookmark.itemId === patternId
+      );
+      setIsBookmarked(isPatternBookmarked);
+    } catch (error) {
+      console.error('북마크 상태 확인 실패:', error);
+    }
+  };
+
+  const toggleBookmark = async () => {
+    try {
+      if (isBookmarked) {
+        await databaseManager.removeBookmark('pattern', patternId);
+        setIsBookmarked(false);
+        Alert.alert('완료', '북마크에서 제거되었습니다.');
+      } else {
+        await databaseManager.addBookmark({
+          itemType: 'pattern',
+          itemId: patternId,
+          itemTitle: title,
+          itemDescription: description,
+        });
+        setIsBookmarked(true);
+        Alert.alert('완료', '북마크에 추가되었습니다.');
+      }
+    } catch (error) {
+      console.error('북마크 토글 실패:', error);
+      Alert.alert('오류', '북마크 처리에 실패했습니다.');
+    }
+  };
 
   const getDifficultyColor = (level: string) => {
     switch (level) {
@@ -69,7 +113,14 @@ const PatternDetailScreen: React.FC = () => {
         <Text style={styles.headerTitle} numberOfLines={1}>
           {title}
         </Text>
-        <View style={styles.placeholder} />
+        <TouchableOpacity 
+          style={styles.bookmarkButton}
+          onPress={toggleBookmark}
+        >
+          <Text style={[styles.bookmarkIcon, isBookmarked && styles.bookmarkedIcon]}>
+            ♥
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView 
@@ -267,8 +318,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: 16,
   },
-  placeholder: {
+  bookmarkButton: {
+    padding: 8,
     width: 80,
+    alignItems: 'center',
+  },
+  bookmarkIcon: {
+    fontSize: 24,
+    color: '#A0ADB8', // 기본 회색
+  },
+  bookmarkedIcon: {
+    color: '#FF6B6B', // 북마크 시 빨간색
   },
   content: {
     flex: 1,

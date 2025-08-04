@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { databaseManager, Pattern } from '../database/DatabaseManager';
 
 // Navigation types
 import { PatternsStackParamList } from '../navigation/AppNavigator';
@@ -20,16 +22,92 @@ type PatternsScreenNavigationProp = StackNavigationProp<PatternsStackParamList, 
 const PatternsScreen: React.FC = () => {
   const route = useRoute<PatternsScreenRouteProp>();
   const navigation = useNavigation<PatternsScreenNavigationProp>();
+  const scrollViewRef = useRef<ScrollView>(null);
   const [activeFilter, setActiveFilter] = useState<string>('전체');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showCategoryMenu, setShowCategoryMenu] = useState<boolean>(false);
+  const [bookmarkedPatterns, setBookmarkedPatterns] = useState<Set<string>>(new Set());
+  const [patterns, setPatterns] = useState<Pattern[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // 초기 필터 설정
+  // 스크롤을 맨 위로 이동하는 함수
+  const scrollToTop = useCallback(() => {
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
+  // 탭 이벤트 리스너 등록 - Patterns 탭 클릭 시 항상 스크롤을 맨 위로
+  useEffect(() => {
+    const unsubscribe = navigation.getParent()?.addListener('tabPress', (e) => {
+      // Patterns 탭이 클릭되면 항상 스크롤을 맨 위로 이동
+      if (e.target?.includes('Patterns')) {
+        // 약간의 지연을 두어 네비게이션이 완료된 후 스크롤
+        setTimeout(() => {
+          scrollToTop();
+        }, 100);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, scrollToTop]);
+
+  // 초기 데이터 로드
   useEffect(() => {
     if (route.params?.initialFilter) {
       setActiveFilter(route.params.initialFilter);
     }
+    loadData();
   }, [route.params?.initialFilter]);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      
+      // 패턴과 북마크 데이터를 병렬로 로드
+      const [patternsData, bookmarks] = await Promise.all([
+        databaseManager.getPatterns(),
+        databaseManager.getBookmarks()
+      ]);
+
+      setPatterns(patternsData);
+
+      const patternBookmarks = new Set(
+        bookmarks
+          .filter(bookmark => bookmark.itemType === 'pattern')
+          .map(bookmark => bookmark.itemId)
+      );
+      setBookmarkedPatterns(patternBookmarks);
+    } catch (error) {
+      console.error('데이터 로드 실패:', error);
+      Alert.alert('오류', '패턴 데이터를 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleBookmark = async (patternId: string, title: string, description: string) => {
+    try {
+      const isBookmarked = bookmarkedPatterns.has(patternId);
+      
+      if (isBookmarked) {
+        await databaseManager.removeBookmark('pattern', patternId);
+        setBookmarkedPatterns(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(patternId);
+          return newSet;
+        });
+      } else {
+        await databaseManager.addBookmark({
+          itemType: 'pattern',
+          itemId: patternId,
+          itemTitle: title,
+          itemDescription: description,
+        });
+        setBookmarkedPatterns(prev => new Set(prev).add(patternId));
+      }
+    } catch (error) {
+      console.error('북마크 토글 실패:', error);
+      Alert.alert('오류', '북마크 처리에 실패했습니다.');
+    }
+  };
 
   const difficultyFilters = ['전체', '초급', '중급', '고급'];
 
@@ -37,34 +115,33 @@ const PatternsScreen: React.FC = () => {
     setActiveFilter(filter);
   };
 
-  const handlePatternPress = (patternData: {
-    id: string;
-    title: string;
-    difficulty: string;
-    duration: string;
-    description: string;
-    materials: string[];
-    steps: string[];
-    videoUrl?: string;
-    hasImages?: boolean;
-    hasPattern?: boolean;
-  }) => {
+  const handlePatternPress = (pattern: Pattern) => {
     navigation.navigate('PatternDetail', {
-      patternId: patternData.id,
-      title: patternData.title,
-      difficulty: patternData.difficulty,
-      duration: patternData.duration,
-      description: patternData.description,
-      materials: patternData.materials,
-      steps: patternData.steps,
-      videoUrl: patternData.videoUrl,
-      hasImages: patternData.hasImages,
-      hasPattern: patternData.hasPattern,
+      patternId: pattern.patternId,
+      title: pattern.title,
+      difficulty: pattern.difficulty,
+      duration: pattern.duration,
+      description: pattern.description,
+      materials: JSON.parse(pattern.materials),
+      steps: JSON.parse(pattern.steps),
+      videoUrl: pattern.videoUrl,
+      hasImages: pattern.hasImages,
+      hasPattern: pattern.hasPattern,
     });
   };
+
+  const filteredPatterns = patterns.filter(pattern => {
+    if (activeFilter !== '전체' && pattern.difficulty !== activeFilter) {
+      return false;
+    }
+    if (searchQuery && !pattern.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    return true;
+  });
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.content}>
+      <ScrollView ref={scrollViewRef} style={styles.content}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerTop}>
@@ -124,138 +201,67 @@ const PatternsScreen: React.FC = () => {
           </ScrollView>
         </View>
 
-        {/* Featured Patterns */}
+        {/* Pattern List */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>인기 패턴</Text>
+          <Text style={styles.sectionTitle}>
+            {activeFilter === '전체' ? '모든 패턴' : `${activeFilter} 패턴`}
+          </Text>
           
-          <TouchableOpacity 
-            style={styles.patternCard}
-            onPress={() => handlePatternPress({
-              id: 'scarf-basic',
-              title: '기본 목도리',
-              difficulty: '초급',
-              duration: '3시간',
-              description: '메리야스뜨기로 만드는 간단한 목도리입니다. 초보자도 쉽게 따라할 수 있어요.',
-              materials: [
-                '중간 굵기 털실 3볼 (약 300g)',
-                '대바늘 8mm 2개',
-                '가위',
-                '털실 바늘 (마무리용)'
-              ],
-              steps: [
-                '대바늘에 40코를 만들어주세요',
-                '1단: 모든 코를 메리야스뜨기로 떠주세요',
-                '2단: 모든 코를 안뜨기로 떠주세요',
-                '1-2단을 반복하여 원하는 길이까지 떠주세요 (약 150cm)',
-                '마지막에 코를 모두 빼고 실 끝을 정리해주세요'
-              ],
-              videoUrl: 'https://youtube.com/example-scarf',
-              hasImages: true,
-              hasPattern: false
-            })}
-          >
-            <View style={styles.cardHeader}>
-              <View style={styles.cardBadges}>
-                <Text style={styles.difficultyBadge}>초급</Text>
-                <Text style={styles.timeBadge}>3시간</Text>
-              </View>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>패턴을 불러오는 중...</Text>
             </View>
-            <View style={styles.cardContent}>
-              <Text style={styles.patternEmoji}>🧣</Text>
-              <View style={styles.cardText}>
-                <Text style={styles.cardTitle}>기본 목도리</Text>
-                <Text style={styles.cardSubtitle}>
-                  메리야스뜨기로 만드는 간단한 목도리
-                </Text>
-              </View>
+          ) : filteredPatterns.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>패턴이 없습니다</Text>
             </View>
-          </TouchableOpacity>
+          ) : (
+            filteredPatterns.map((pattern) => {
+              const getDifficultyStyle = () => {
+                switch (pattern.difficulty) {
+                  case '중급': return styles.intermediateBadge;
+                  case '고급': return styles.advancedBadge;
+                  default: return {};
+                }
+              };
 
-          <TouchableOpacity 
-            style={styles.patternCard}
-            onPress={() => handlePatternPress({
-              id: 'dishcloth-basic',
-              title: '면행주',
-              difficulty: '초급',
-              duration: '1시간',
-              description: '초보자를 위한 사각형 행주 만들기입니다. 실용적이고 만들기 쉬워요.',
-              materials: [
-                '면실 1볼 (약 50g)',
-                '코바늘 5mm 1개',
-                '가위'
-              ],
-              steps: [
-                '슬립노트를 만들고 사슬 30코를 떠주세요',
-                '1단: 두 번째 사슬부터 한길긴뜨기를 29개 떠주세요',
-                '2단: 사슬 1코, 돌려서 한길긴뜨기 29개',
-                '2단을 반복하여 정사각형이 될 때까지 떠주세요',
-                '실 끝을 정리하고 완성해주세요'
-              ],
-              videoUrl: 'https://youtube.com/example-dishcloth',
-              hasImages: true,
-              hasPattern: true
-            })}
-          >
-            <View style={styles.cardHeader}>
-              <View style={styles.cardBadges}>
-                <Text style={styles.difficultyBadge}>초급</Text>
-                <Text style={styles.timeBadge}>1시간</Text>
-              </View>
-            </View>
-            <View style={styles.cardContent}>
-              <Text style={styles.patternEmoji}>🏠</Text>
-              <View style={styles.cardText}>
-                <Text style={styles.cardTitle}>면행주</Text>
-                <Text style={styles.cardSubtitle}>
-                  초보자를 위한 사각형 행주 만들기
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.patternCard}
-            onPress={() => handlePatternPress({
-              id: 'gloves-basic',
-              title: '기본 장갑',
-              difficulty: '중급',
-              duration: '6시간',
-              description: '손가락이 있는 기본 겨울 장갑입니다. 약간의 경험이 필요해요.',
-              materials: [
-                '모직실 2볼 (약 100g)',
-                '대바늘 6mm 4개 (또는 원형바늘)',
-                '털실 바늘',
-                '가위',
-                '코마커 4개'
-              ],
-              steps: [
-                '손목 부분: 40코를 4개 바늘로 나누어 고무뜨기',
-                '손등과 손바닥 부분을 메리야스뜨기로 진행',
-                '엄지 부분: 8코를 따로 빼고 나머지 진행',
-                '각 손가락별로 코를 나누어 뜨기',
-                '엄지와 각 손가락을 완성하여 마무리'
-              ],
-              videoUrl: 'https://youtube.com/example-gloves',
-              hasImages: true,
-              hasPattern: true
-            })}
-          >
-            <View style={styles.cardHeader}>
-              <View style={styles.cardBadges}>
-                <Text style={[styles.difficultyBadge, styles.intermediateBadge]}>중급</Text>
-                <Text style={styles.timeBadge}>6시간</Text>
-              </View>
-            </View>
-            <View style={styles.cardContent}>
-              <Text style={styles.patternEmoji}>🧤</Text>
-              <View style={styles.cardText}>
-                <Text style={styles.cardTitle}>기본 장갑</Text>
-                <Text style={styles.cardSubtitle}>
-                  손가락이 있는 기본 겨울 장갑
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+              return (
+                <TouchableOpacity 
+                  key={pattern.patternId}
+                  style={styles.patternCard}
+                  onPress={() => handlePatternPress(pattern)}
+                >
+                  <View style={styles.cardHeader}>
+                    <View style={styles.cardBadges}>
+                      <Text style={[styles.difficultyBadge, getDifficultyStyle()]}>
+                        {pattern.difficulty}
+                      </Text>
+                      <Text style={styles.timeBadge}>{pattern.duration}</Text>
+                    </View>
+                    <TouchableOpacity 
+                      style={styles.bookmarkButton}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleBookmark(pattern.patternId, pattern.title, pattern.description);
+                      }}
+                    >
+                      <Text style={[styles.bookmarkIcon, bookmarkedPatterns.has(pattern.patternId) && styles.bookmarkedIcon]}>
+                        ♥
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.cardContent}>
+                    <View style={styles.cardText}>
+                      <Text style={styles.cardTitle}>{pattern.title}</Text>
+                      <Text style={styles.cardSubtitle}>
+                        {pattern.description}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+          )}
         </View>
 
 
@@ -507,12 +513,22 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
   },
   cardBadges: {
     flexDirection: 'row',
+  },
+  bookmarkButton: {
+    padding: 4,
+  },
+  bookmarkIcon: {
+    fontSize: 20,
+    color: '#A0ADB8', // 기본 회색
+  },
+  bookmarkedIcon: {
+    color: '#FF6B6B', // 북마크 시 빨간색
   },
   difficultyBadge: {
     fontSize: 12,
@@ -542,6 +558,32 @@ const styles = StyleSheet.create({
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  // Loading and empty states
+  loadingContainer: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#4A5568',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#718096',
+    textAlign: 'center',
+  },
+  // Advanced difficulty badge style
+  advancedBadge: {
+    color: '#F56565',
+    backgroundColor: '#FEF2F2',
   },
   patternEmoji: {
     fontSize: 32,

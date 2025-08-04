@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { HomeStackParamList, BottomTabParamList } from '../navigation/AppNavigator';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { databaseManager, Bookmark, Pattern } from '../database/DatabaseManager';
 
 type HomeScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<HomeStackParamList, 'HomeMain'>,
@@ -24,20 +24,169 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
-  // AsyncStorage 기능 임시 비활성화
-  // const [isFirstKnittingCompleted, setIsFirstKnittingCompleted] = useState(false);
-  // const [completionData, setCompletionData] = useState<any>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [isQuickStartCompleted, setIsQuickStartCompleted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [bookmarkedPatterns, setBookmarkedPatterns] = useState<Pattern[]>([]);
 
-  const handleQuickStart = () => {
-    navigation.navigate('Tutorial', { 
-      screen: 'FirstKnitting'
+  // 스크롤을 맨 위로 이동하는 함수
+  const scrollToTop = useCallback(() => {
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
+  // 탭 이벤트 리스너 등록 - Home 탭 클릭 시 항상 스크롤을 맨 위로
+  useEffect(() => {
+    const unsubscribe = navigation.getParent()?.addListener('tabPress', (e) => {
+      // Home 탭이 클릭되면 항상 스크롤을 맨 위로 이동
+      if (e.target?.includes('Home')) {
+        // 약간의 지연을 두어 네비게이션이 완료된 후 스크롤
+        setTimeout(() => {
+          scrollToTop();
+        }, 100);
+      }
     });
+    return unsubscribe;
+  }, [navigation, scrollToTop]);
+
+  // 화면이 포커스될 때마다 빠른 시작 상태 확인
+  useFocusEffect(
+    React.useCallback(() => {
+      checkQuickStartStatus();
+    }, [])
+  );
+
+  const checkQuickStartStatus = async () => {
+    try {
+      const completed = await databaseManager.isQuickStartCompleted();
+      setIsQuickStartCompleted(completed);
+      
+      // 북마크된 패턴 불러오기
+      await loadBookmarkedPatterns();
+    } catch (error) {
+      console.error('빠른 시작 상태 확인 실패:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadBookmarkedPatterns = async () => {
+    try {
+      const bookmarks = await databaseManager.getBookmarks();
+      const patternBookmarks = bookmarks.filter(bookmark => bookmark.itemType === 'pattern');
+      
+      // 북마크된 패턴의 상세 정보 가져오기
+      const patterns: Pattern[] = [];
+      for (const bookmark of patternBookmarks) {
+        const pattern = await databaseManager.getPatternById(bookmark.itemId);
+        if (pattern) {
+          patterns.push(pattern);
+        }
+      }
+      
+      setBookmarkedPatterns(patterns);
+    } catch (error) {
+      console.error('북마크 패턴 로드 실패:', error);
+    }
+  };
+
+  const handleQuickStart = async () => {
+    try {
+      // 빠른 시작 완료 상태로 저장
+      await databaseManager.setQuickStartCompleted();
+      setIsQuickStartCompleted(true);
+      
+      // 첫 뜨개질 화면으로 이동
+      navigation.navigate('Tutorial', { 
+        screen: 'FirstKnitting'
+      });
+    } catch (error) {
+      console.error('빠른 시작 상태 저장 실패:', error);
+      // 에러가 있어도 페이지는 이동
+      navigation.navigate('Tutorial', { 
+        screen: 'FirstKnitting'
+      });
+    }
   };
 
   const handleSeeAllPatterns = () => {
     navigation.navigate('Patterns', { 
       screen: 'PatternsList',
       params: { initialFilter: '초급' }
+    });
+  };
+
+  const handleFeaturedPatternPress = async (patternId: string) => {
+    try {
+      const pattern = await databaseManager.getPatternById(patternId);
+      if (pattern) {
+        let materials: string[];
+        let steps: string[];
+        
+        try {
+          materials = typeof pattern.materials === 'string' 
+            ? JSON.parse(pattern.materials) 
+            : pattern.materials;
+          steps = typeof pattern.steps === 'string' 
+            ? JSON.parse(pattern.steps) 
+            : pattern.steps;
+        } catch (error) {
+          console.error('패턴 데이터 파싱 오류:', error);
+          return;
+        }
+
+        navigation.navigate('Patterns', {
+          screen: 'PatternDetail',
+          params: {
+            patternId: pattern.patternId,
+            title: pattern.title,
+            difficulty: pattern.difficulty,
+            duration: pattern.duration,
+            videoUrl: pattern.videoUrl,
+            materials,
+            steps,
+            description: pattern.description,
+            hasImages: pattern.hasImages,
+            hasPattern: pattern.hasPattern,
+          }
+        });
+      }
+    } catch (error) {
+      console.error('패턴 로드 실패:', error);
+    }
+  };
+
+  const handleBookmarkPatternPress = (pattern: Pattern) => {
+    if (!pattern.materials || !pattern.steps) return;
+    
+    let materials: string[];
+    let steps: string[];
+    
+    try {
+      materials = typeof pattern.materials === 'string' 
+        ? JSON.parse(pattern.materials) 
+        : pattern.materials;
+      steps = typeof pattern.steps === 'string' 
+        ? JSON.parse(pattern.steps) 
+        : pattern.steps;
+    } catch (error) {
+      console.error('패턴 데이터 파싱 오류:', error);
+      return;
+    }
+
+    navigation.navigate('Patterns', {
+      screen: 'PatternDetail',
+      params: {
+        patternId: pattern.patternId,
+        title: pattern.title,
+        difficulty: pattern.difficulty,
+        duration: pattern.duration,
+        videoUrl: pattern.videoUrl,
+        materials,
+        steps,
+        description: pattern.description,
+        hasImages: pattern.hasImages,
+        hasPattern: pattern.hasPattern,
+      }
     });
   };
 
@@ -76,6 +225,7 @@ const HomeScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView 
+        ref={scrollViewRef}
         style={styles.content}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -88,11 +238,10 @@ const HomeScreen: React.FC = () => {
           </Text>
         </View>
 
-        {/* Quick Start Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>빠른 시작</Text>
-          {/* AsyncStorage 비활성화로 항상 빠른 시작 카드 표시 */}
-          {true ? (
+        {/* Quick Start Section - 한 번 클릭하면 사라짐 */}
+        {!loading && !isQuickStartCompleted && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>빠른 시작</Text>
             <TouchableOpacity 
               style={styles.quickStartCard} 
               onPress={handleQuickStart}
@@ -116,8 +265,8 @@ const HomeScreen: React.FC = () => {
                 </View>
               </View>
             </TouchableOpacity>
-          ) : null}
-        </View>
+          </View>
+        )}
 
         {/* Featured Patterns */}
         <View style={styles.section}>
@@ -137,13 +286,11 @@ const HomeScreen: React.FC = () => {
             <TouchableOpacity 
               style={styles.patternCard}
               activeOpacity={0.7}
+              onPress={() => handleFeaturedPatternPress('scarf-basic')}
               accessibilityRole="button"
               accessibilityLabel="간단한 목도리 패턴"
             >
               <View style={styles.cardContent}>
-                <View style={styles.cardIconWrapper}>
-                  <Text style={styles.cardEmoji}>🧣</Text>
-                </View>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>간단한 목도리</Text>
                   <Text style={styles.cardSubtitle}>
@@ -156,13 +303,11 @@ const HomeScreen: React.FC = () => {
             <TouchableOpacity 
               style={styles.patternCard}
               activeOpacity={0.7}
+              onPress={() => handleFeaturedPatternPress('dishcloth-basic')}
               accessibilityRole="button"
               accessibilityLabel="행주 뜨기 패턴"
             >
               <View style={styles.cardContent}>
-                <View style={styles.cardIconWrapper}>
-                  <Text style={styles.cardEmoji}>🏠</Text>
-                </View>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>행주 뜨기</Text>
                   <Text style={styles.cardSubtitle}>
@@ -173,6 +318,45 @@ const HomeScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Bookmarked Patterns - 북마크가 있을 때만 표시 */}
+        {bookmarkedPatterns.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>내 북마크</Text>
+              <TouchableOpacity 
+                style={styles.seeAllButton}
+                onPress={() => navigation.navigate('Settings', { screen: 'Bookmarks' })}
+                accessibilityRole="button"
+                accessibilityLabel="북마크 전체보기"
+              >
+                <Text style={styles.seeAllText}>전체보기</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.patternGrid}>
+              {bookmarkedPatterns.slice(0, 3).map((pattern) => (
+                <TouchableOpacity 
+                  key={pattern.patternId}
+                  style={styles.patternCard}
+                  activeOpacity={0.7}
+                  onPress={() => handleBookmarkPatternPress(pattern)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${pattern.title} 패턴`}
+                >
+                  <View style={styles.cardContent}>
+                    <View style={styles.cardText}>
+                      <Text style={styles.cardTitle}>{pattern.title}</Text>
+                      <Text style={styles.cardSubtitle}>
+                        {pattern.difficulty} • {pattern.duration}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
 
         {/* Daily Tip */}
         <View style={[styles.section, styles.lastSection]}>
@@ -299,7 +483,7 @@ const styles = StyleSheet.create({
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   cardIconWrapper: {
     width: 48,

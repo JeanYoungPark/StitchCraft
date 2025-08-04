@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,30 @@ import { useNavigation } from '@react-navigation/native';
 
 const TutorialScreen: React.FC = () => {
   const navigation = useNavigation();
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // 스크롤을 맨 위로 이동하는 함수
+  const scrollToTop = useCallback(() => {
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  }, []);
+
+  // 탭 이벤트 리스너 등록 - Tutorial 탭 클릭 시 항상 스크롤을 맨 위로
+  useEffect(() => {
+    const unsubscribe = navigation.getParent()?.addListener('tabPress', (e) => {
+      // Tutorial 탭이 클릭되면 항상 스크롤을 맨 위로 이동
+      if (e.target?.includes('Tutorial')) {
+        // 약간의 지연을 두어 네비게이션이 완료된 후 스크롤
+        setTimeout(() => {
+          scrollToTop();
+        }, 100);
+      }
+    });
+    return unsubscribe;
+  }, [navigation, scrollToTop]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.content}>
+      <ScrollView ref={scrollViewRef} style={styles.content}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>뜨개질 배우기</Text>
