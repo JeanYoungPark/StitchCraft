@@ -1,0 +1,409 @@
+● Validation Warning:
+
+  Unknown option "server.runInspectorProxy" with value true was found.
+  This is probably a typing mistake. Fixing it will remove this message.
+
+info Welcome to React Native v0.73
+info Starting dev server on port 8081...
+
+                        ▒▒▓▓▓▓▒▒
+                     ▒▓▓▓▒▒░░▒▒▓▓▓▒
+                  ▒▓▓▓▓░░░▒▒▒▒░░░▓▓▓▓▒
+                 ▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓
+                 ▓▓░░░░░▒▓▓▓▓▓▓▒░░░░░▓▓
+                 ▓▓░░▓▓▒░░░▒▒░░░▒▓▒░░▓▓
+                 ▓▓░░▓▓▓▓▓▒▒▒▒▓▓▓▓▒░░▓▓
+                 ▓▓░░▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░▓▓
+                 ▓▓▒░░▒▒▓▓▓▓▓▓▓▓▒░░░▒▓▓
+                  ▒▓▓▓▒░░░▒▓▓▒░░░▒▓▓▓▒
+                     ▒▓▓▓▒░░░░▒▓▓▓▒
+                        ▒▒▓▓▓▓▒▒
+
+
+                Welcome to Metro v0.80.12
+              Fast - Scalable - Integrated
+
+
+info React Native v0.80.2 is now available (your project is running on v0.73.8).
+info Changelog: https://github.com/facebook/react-native/releases/tag/v0.80.2
+info Diff: https://react-native-community.github.io/upgrade-helper/?from=0.80.2
+info For more info, check out "https://reactnative.dev/docs/upgrading?os=macos".
+info Dev server ready
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":1,"initialProps":{}}
+ ERROR  Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNGestureHandlerModule' could not be found. Verify that a module by this name is registered in the native binary.Bridgeless mode: false. TurboModule interop: false. Modules loaded: {"NativeModules":["PlatformConstants","LogBox","Timing","AppState","SourceCode","BlobModule","WebSocketModule","SettingsManager","DevSettings","RedBox","Networking","Appearance","DevLoadingView","UIManager","DeviceInfo","ImageLoader","LinkingManager","RNCSafeAreaContext","StatusBarManager","StatusBarManager","NativeAnimatedModule"],"TurboModules":[],"NotFound":["NativePerformanceCxx","NativePerformanceObserverCxx","BugReporting","HeadlessJsTaskSupport","SoundManager","IntentAndroid","RNGestureHandlerModule"]}, js engine: hermes 
+    at loadModuleImplementation (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:267:14)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at AppContainer (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59045:36)
+    at stitchcraft(RootComponent) (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:110548:28)
+ ERROR  Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNGestureHandlerModule' could not be found. Verify that a module by this name is registered in the native binary.Bridgeless mode: false. TurboModule interop: false. Modules loaded: {"NativeModules":["PlatformConstants","LogBox","Timing","AppState","SourceCode","BlobModule","WebSocketModule","SettingsManager","DevSettings","RedBox","Networking","Appearance","DevLoadingView","UIManager","DeviceInfo","ImageLoader","LinkingManager","RNCSafeAreaContext","StatusBarManager","StatusBarManager","NativeAnimatedModule"],"TurboModules":[],"NotFound":["NativePerformanceCxx","NativePerformanceObserverCxx","BugReporting","HeadlessJsTaskSupport","SoundManager","IntentAndroid","RNGestureHandlerModule"]}, js engine: hermes 
+    at beginWork (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:95827:49)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at AppContainer (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59045:36)
+    at stitchcraft(RootComponent) (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:110548:28)
+ ERROR  TypeError: Cannot read property 'AppNavigator' of undefined
+
+This error is located at:
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ ERROR  TypeError: Cannot read property 'AppNavigator' of undefined
+
+This error is located at:
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+info Opening /Users/jy/Documents/dev/study/StitchCraft/node_modules/react-native-gesture-handler/src/RNGestureHandlerModule.ts with vi
+Vim: Warning: Output is not to a terminal
+Vim: Warning: Input is not from a terminal
+[?1049h[>4;2m[?1h=[?2004h[?1004h[1;24r[?12h[?12l[22;2t[22;1t[27m[23m[29m[m[H[2J[?2004l[>4;m[?2004h[>4;2m[?25l[24;1H<raft/node_modules/react-native-gesture-handler/src/RNGestureHandlerModule.ts"[?2004l[>4;m[?2004h[>4;2m<e_modules/react-native-gesture-handler/src/RNGestureHandlerModule.ts" 5L, 267B[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[1;1H// Reexport the native module spec used by codegen. The relevant files are inludd[2;1Hed on Android
+// to ensure the compatibility with the old arch, while iOS doesn't require thoss[4;1He at all.
+
+import Module from './specs/NativeRNGestureHandlerModule';
+export default Module;
+[94m~                                                                               [9;1H~                                                                               [10;1H~                                                                               [11;1H~                                                                               [12;1H~                                                                               [13;1H~                                                                               [14;1H~                                                                               [15;1H~                                                                               [16;1H~                                                                               [17;1H~                                                                               [18;1H~                                                                               [19;1H~                                                                               [20;1H~                                                                               [21;1H~                                                                               [22;1H~                                                                               [23;1H~                                                                               [1;1H[?25h[?4m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[?2004l[>4;m[?2004h[>4;2m[24;1H[?2004l[>4;m[m[?1004l[?2004l[?1l>[?1049l[>4;mVim: Error reading input, exiting...
+Vim: Finished.
+[24;1H[23;2t[23;1t
+error Your editor exited with an error!
+info 
+ Keep these instructions in mind: 
+  When you see Red Box with stack trace, you can click any 
+  stack frame to jump to the source file. The packager will launch your 
+  editor of choice. It will first look at REACT_EDITOR environment 
+  variable, then at EDITOR.
+  To set it up, you can add something like 
+  export REACT_EDITOR=atom to your ~/.bashrc or ~/.zshrc depending on 
+  which shell you use.
+
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":21,"initialProps":{}}
+ ERROR  Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNGestureHandlerModule' could not be found. Verify that a module by this name is registered in the native binary.Bridgeless mode: false. TurboModule interop: false. Modules loaded: {"NativeModules":["PlatformConstants","LogBox","Timing","AppState","SourceCode","BlobModule","WebSocketModule","SettingsManager","DevSettings","RedBox","Networking","Appearance","DevLoadingView","UIManager","DeviceInfo","ImageLoader","LinkingManager","RNCSafeAreaContext","StatusBarManager","StatusBarManager","NativeAnimatedModule"],"TurboModules":[],"NotFound":["NativePerformanceCxx","NativePerformanceObserverCxx","BugReporting","HeadlessJsTaskSupport","SoundManager","IntentAndroid","RNGestureHandlerModule"]}, js engine: hermes 
+    at loadModuleImplementation (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:267:14)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at AppContainer (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59045:36)
+    at stitchcraft(RootComponent) (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:110548:28)
+ ERROR  Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNGestureHandlerModule' could not be found. Verify that a module by this name is registered in the native binary.Bridgeless mode: false. TurboModule interop: false. Modules loaded: {"NativeModules":["PlatformConstants","LogBox","Timing","AppState","SourceCode","BlobModule","WebSocketModule","SettingsManager","DevSettings","RedBox","Networking","Appearance","DevLoadingView","UIManager","DeviceInfo","ImageLoader","LinkingManager","RNCSafeAreaContext","StatusBarManager","StatusBarManager","NativeAnimatedModule"],"TurboModules":[],"NotFound":["NativePerformanceCxx","NativePerformanceObserverCxx","BugReporting","HeadlessJsTaskSupport","SoundManager","IntentAndroid","RNGestureHandlerModule"]}, js engine: hermes 
+    at beginWork (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:95827:49)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at RCTView
+    at View (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59202:43)
+    at AppContainer (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:59045:36)
+    at stitchcraft(RootComponent) (http://localhost:8081/index.bundle//&platform=ios&dev=true&lazy=true&minify=false&inlineSourceMap=false&modulesOnly=false&runModule=true&app=com.stitchcraft:110548:28)
+ ERROR  TypeError: Cannot read property 'AppNavigator' of undefined
+
+This error is located at:
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ ERROR  TypeError: Cannot read property 'AppNavigator' of undefined
+
+This error is located at:
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ BUNDLE  ./index.js 
+
+ ERROR  Invariant Violation: TurboModuleRegistry.getEnforcing(...): 'RNGestureHandlerModule' could not be found. Verify that a module by this name is registered in the native binary.Bridgeless mode: false. TurboModule interop: false. Modules loaded: {"NativeModules":["PlatformConstants","LogBox","Timing","AppState","SourceCode","BlobModule","WebSocketModule","SettingsManager","DevSettings","RedBox","Networking","Appearance","DevLoadingView","UIManager","DeviceInfo"],"TurboModules":[],"NotFound":["NativePerformanceCxx","NativePerformanceObserverCxx","BugReporting","HeadlessJsTaskSupport","RNGestureHandlerModule"]}, js engine: hermes
+ LOG  Running "stitchcraft" with {"rootTag":41,"initialProps":{}}
+ ERROR  Invariant Violation: "stitchcraft" has not been registered. This can happen if:
+* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.
+* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called., js engine: hermes
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":1,"initialProps":{}}
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":11,"initialProps":{}}
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":1,"initialProps":{}}
+ ERROR  ReferenceError: Property 'TabIcon' doesn't exist
+
+This error is located at:
+    in TabBarIcon (created by BottomTabBarItem)
+    in RCTView (created by View)
+    in View (created by Pressable)
+    in Pressable (created by Pressable)
+    in BottomTabBarItem (created by BottomTabBar)
+    in RCTView (created by View)
+    in View (created by BottomTabBar)
+    in RCTView (created by View)
+    in View
+    in Unknown (created by BottomTabBar)
+    in BottomTabBar (created by SafeAreaInsetsContext)
+    in RCTView (created by View)
+    in View (created by SafeAreaProviderCompat)
+    in SafeAreaProviderCompat (created by BottomTabView)
+    in BottomTabView (created by BottomTabNavigator)
+    in PreventRemoveProvider (created by NavigationContent)
+    in NavigationContent
+    in Unknown (created by BottomTabNavigator)
+    in BottomTabNavigator (created by AppNavigator)
+    in AppNavigator (created by App)
+    in EnsureSingleNavigator
+    in BaseNavigationContainer
+    in ThemeProvider
+    in NavigationContainerInner (created by App)
+    in RNCSafeAreaProvider (created by SafeAreaProvider)
+    in SafeAreaProvider (created by App)
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ ERROR  ReferenceError: Property 'TabIcon' doesn't exist
+
+This error is located at:
+    in TabBarIcon (created by BottomTabBarItem)
+    in RCTView (created by View)
+    in View (created by Pressable)
+    in Pressable (created by Pressable)
+    in BottomTabBarItem (created by BottomTabBar)
+    in RCTView (created by View)
+    in View (created by BottomTabBar)
+    in RCTView (created by View)
+    in View
+    in Unknown (created by BottomTabBar)
+    in BottomTabBar (created by SafeAreaInsetsContext)
+    in RCTView (created by View)
+    in View (created by SafeAreaProviderCompat)
+    in SafeAreaProviderCompat (created by BottomTabView)
+    in BottomTabView (created by BottomTabNavigator)
+    in PreventRemoveProvider (created by NavigationContent)
+    in NavigationContent
+    in Unknown (created by BottomTabNavigator)
+    in BottomTabNavigator (created by AppNavigator)
+    in AppNavigator (created by App)
+    in EnsureSingleNavigator
+    in BaseNavigationContainer
+    in ThemeProvider
+    in NavigationContainerInner (created by App)
+    in RNCSafeAreaProvider (created by SafeAreaProvider)
+    in SafeAreaProvider (created by App)
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ ERROR  ReferenceError: Property 'TabIcon' doesn't exist
+
+This error is located at:
+    in TabBarIcon (created by BottomTabBarItem)
+    in RCTView (created by View)
+    in View (created by Pressable)
+    in Pressable (created by Pressable)
+    in BottomTabBarItem (created by BottomTabBar)
+    in RCTView (created by View)
+    in View (created by BottomTabBar)
+    in RCTView (created by View)
+    in View
+    in Unknown (created by BottomTabBar)
+    in BottomTabBar (created by SafeAreaInsetsContext)
+    in RCTView (created by View)
+    in View (created by SafeAreaProviderCompat)
+    in SafeAreaProviderCompat (created by BottomTabView)
+    in BottomTabView (created by BottomTabNavigator)
+    in PreventRemoveProvider (created by NavigationContent)
+    in NavigationContent
+    in Unknown (created by BottomTabNavigator)
+    in BottomTabNavigator (created by AppNavigator)
+    in AppNavigator (created by App)
+    in EnsureSingleNavigator
+    in BaseNavigationContainer
+    in ThemeProvider
+    in NavigationContainerInner (created by App)
+    in RNCSafeAreaProvider (created by SafeAreaProvider)
+    in SafeAreaProvider (created by App)
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ ERROR  ReferenceError: Property 'TabIcon' doesn't exist
+
+This error is located at:
+    in TabBarIcon (created by BottomTabBarItem)
+    in RCTView (created by View)
+    in View (created by Pressable)
+    in Pressable (created by Pressable)
+    in BottomTabBarItem (created by BottomTabBar)
+    in RCTView (created by View)
+    in View (created by BottomTabBar)
+    in RCTView (created by View)
+    in View
+    in Unknown (created by BottomTabBar)
+    in BottomTabBar (created by SafeAreaInsetsContext)
+    in RCTView (created by View)
+    in View (created by SafeAreaProviderCompat)
+    in SafeAreaProviderCompat (created by BottomTabView)
+    in BottomTabView (created by BottomTabNavigator)
+    in PreventRemoveProvider (created by NavigationContent)
+    in NavigationContent
+    in Unknown (created by BottomTabNavigator)
+    in BottomTabNavigator (created by AppNavigator)
+    in AppNavigator (created by App)
+    in EnsureSingleNavigator
+    in BaseNavigationContainer
+    in ThemeProvider
+    in NavigationContainerInner (created by App)
+    in RNCSafeAreaProvider (created by SafeAreaProvider)
+    in SafeAreaProvider (created by App)
+    in App
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in RCTView (created by View)
+    in View (created by AppContainer)
+    in AppContainer
+    in stitchcraft(RootComponent), js engine: hermes
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":1,"initialProps":{}}
+ BUNDLE  ./index.js 
+
+ LOG  Running "stitchcraft" with {"rootTag":11,"initialProps":{}}
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
+ ERROR  Error: [@RNC/AsyncStorage]: NativeModule: AsyncStorage is null.
+
+To fix this issue try these steps:
+
+  • Uninstall, rebuild and restart the app.
+
+  • Run the packager with `--reset-cache` flag.
+
+  • If you are using CocoaPods on iOS, run `pod install` in the `ios` directory, then rebuild and re-run the app.
+
+  • Make sure your project's `package.json` depends on `@react-native-async-storage/async-storage`, even if you only depend on it indirectly through other dependencies. CLI only autolinks native modules found in your `package.json`.
+
+  • If this happens while testing with Jest, check out how to integrate AsyncStorage here: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest
+
+If none of these fix the issue, please open an issue on the GitHub repository: https://github.com/react-native-async-storage/async-storage/issues
+, js engine: hermes
