@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { databaseManager } from '../database/DatabaseManager';
 import { SettingsStackParamList } from '../navigation/AppNavigator';
 
@@ -65,6 +66,7 @@ const SettingsScreen: React.FC = () => {
     navigation.navigate('Bookmarks');
   };
 
+
   // 개발/테스트용 데이터 초기화 함수
   const handleResetData = () => {
     Alert.alert(
@@ -78,6 +80,8 @@ const SettingsScreen: React.FC = () => {
           onPress: async () => {
             try {
               await databaseManager.clearAllData();
+              // TODO: AsyncStorage 연결 후 활성화
+              // await AsyncStorage.removeItem('hasVisitedHome');
               await loadSettings();
               Alert.alert('완료', '데이터가 초기화되었습니다.');
             } catch (error) {
@@ -129,6 +133,7 @@ const SettingsScreen: React.FC = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>앱 설정</Text>
           
+
           <TouchableOpacity style={styles.menuItem} onPress={handleContact}>
             <View style={styles.menuLeft}>
               <View style={styles.menuText}>
@@ -156,7 +161,9 @@ const SettingsScreen: React.FC = () => {
         {/* 앱 정보 */}
         <View style={styles.appInfo}>
           <Text style={styles.appVersion}>StitchCraft v1.0.0</Text>
-          <Text style={styles.dbInfo}>SQLite 연동 (북마크 & 설정)</Text>
+          <Text style={styles.dataInfo}>
+            북마크는 기기에 저장되며, 앱 삭제 시 함께 제거됩니다
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -269,12 +276,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 12,
   },
-  dbInfo: {
+  dataInfo: {
     fontSize: 12,
-    color: '#6B73FF',
-    fontWeight: '500',
+    color: '#6B7280',
+    fontWeight: '400',
+    textAlign: 'center',
+    backgroundColor: '#F9FAFB',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    maxWidth: 300,
   },
 });
 

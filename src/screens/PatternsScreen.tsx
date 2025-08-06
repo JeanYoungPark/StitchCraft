@@ -158,6 +158,9 @@ const PatternsScreen: React.FC = () => {
               <Text style={styles.subtitle}>
                 다양한 뜨개질 패턴을 찾아보세요
               </Text>
+              <Text style={styles.updateInfo}>
+                새 패턴이 주기적으로 추가됩니다
+              </Text>
             </View>
             <View style={styles.headerPlaceholder} />
           </View>
@@ -429,6 +432,13 @@ const styles = StyleSheet.create({
     color: '#4A5568',
     textAlign: 'center',
     lineHeight: 24,
+  },
+  updateInfo: {
+    fontSize: 12,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginTop: 4,
+    fontStyle: 'italic',
   },
   searchSection: {
     marginBottom: 20,
