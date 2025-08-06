@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { knittingTipsData, KnittingTip } from '../data/KnittingTipsData';
+import AdBanner from '../components/AdBanner';
 
 const KnittingTipsScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -153,6 +154,9 @@ const KnittingTipsScreen: React.FC = () => {
           </View>
         </View>
       </ScrollView>
+      
+      {/* 하단 배너 광고 */}
+      <AdBanner />
     </SafeAreaView>
   );
 };

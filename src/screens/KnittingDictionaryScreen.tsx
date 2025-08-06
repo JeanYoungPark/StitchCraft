@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { knittingTermsData, KnittingTerm } from '../data/KnittingDictionaryData';
+import AdBanner from '../components/AdBanner';
 
 const KnittingDictionaryScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -205,6 +206,9 @@ const KnittingDictionaryScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.termsList}
       />
+      
+      {/* 하단 배너 광고 */}
+      <AdBanner />
     </SafeAreaView>
   );
 };

@@ -11,6 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
+import AdBanner from '../components/AdBanner';
 
 const { height: screenHeight } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = 60; // 앱 네비게이터에서 정의된 탭바 높이
@@ -217,6 +218,9 @@ const FirstKnittingScreen: React.FC = () => {
             </Text>
           </View>
         </ScrollView>
+        
+        {/* 하단 배너 광고 */}
+        <AdBanner />
       </View>
     );
   }
@@ -430,6 +434,9 @@ const FirstKnittingScreen: React.FC = () => {
           )}
         </View>
       </ScrollView>
+
+      {/* 하단 배너 광고 */}
+      <AdBanner />
 
       {/* Enhanced Navigation Buttons - 절대 위치 고정 */}
       <View style={[styles.buttonContainer, {

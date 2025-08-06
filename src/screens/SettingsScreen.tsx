@@ -14,6 +14,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { databaseManager } from '../database/DatabaseManager';
 import { SettingsStackParamList } from '../navigation/AppNavigator';
+import AdBanner from '../components/AdBanner';
 
 type SettingsScreenNavigationProp = StackNavigationProp<SettingsStackParamList, 'SettingsMain'>;
 
@@ -166,6 +167,9 @@ const SettingsScreen: React.FC = () => {
           </Text>
         </View>
       </ScrollView>
+      
+      {/* 하단 배너 광고 */}
+      <AdBanner />
     </SafeAreaView>
   );
 };
@@ -174,7 +178,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FDF6E3',
-    paddingBottom: 60, // Tab bar height
   },
   content: {
     flex: 1,
