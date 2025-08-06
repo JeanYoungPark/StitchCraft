@@ -6,12 +6,18 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const { height: screenHeight } = Dimensions.get('window');
+const TAB_BAR_HEIGHT = 60; // 앱 네비게이터에서 정의된 탭바 높이
+
 const FirstKnittingScreen: React.FC = () => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedNeedleType, setSelectedNeedleType] = useState<'crochet' | 'knitting' | null>(null);
 
@@ -134,22 +140,28 @@ const FirstKnittingScreen: React.FC = () => {
   // 바늘 선택 화면
   if (!selectedNeedleType) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Text style={styles.backButtonText}>← 돌아가기</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>뜨개질 방법 선택</Text>
-          <View style={styles.placeholder} />
-        </View>
+      <View style={styles.container}>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.backButtonText}>← 돌아가기</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>뜨개질 방법 선택</Text>
+            <View style={styles.placeholder} />
+          </View>
+        </SafeAreaView>
 
         <ScrollView 
-          style={styles.content}
-          contentContainerStyle={styles.scrollContent}
+          style={[styles.content, { flex: 1 }]} // flex: 1 추가로 스크롤 공간 확보
+          contentContainerStyle={[styles.selectionScrollContent, {
+            paddingBottom: TAB_BAR_HEIGHT + 20, // 탭바 높이 + 여백
+            flexGrow: 1 // 콘텐츠가 화면을 채우도록
+          }]}
           showsVerticalScrollIndicator={false}
+          bounces={true}
         >
           <View style={styles.selectionHeader}>
             <Text style={styles.selectionTitle}>어떤 뜨개질을 배우고 싶나요?</Text>
@@ -205,7 +217,7 @@ const FirstKnittingScreen: React.FC = () => {
             </Text>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -213,65 +225,69 @@ const FirstKnittingScreen: React.FC = () => {
   const isLastStep = currentStep === steps.length - 1;
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => setSelectedNeedleType(null)}
-        >
-          <Text style={styles.backButtonText}>← 선택으로</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>
-          {selectedNeedleType === 'crochet' ? '코바늘 뜨개질' : '대바늘 뜨개질'}
-        </Text>
-        <View style={styles.placeholder} />
-      </View>
-
-      {/* Enhanced Progress Indicator */}
-      <View style={styles.progressContainer}>
-        <View style={styles.progressTrack}>
-          {steps.map((step, index) => (
-            <View key={index} style={styles.progressStep}>
-              <View style={[
-                styles.progressDot,
-                index === currentStep && styles.currentProgressDot,
-                index < currentStep && styles.completedProgressDot
-              ]}>
-                {index < currentStep && (
-                  <Text style={styles.completedIcon}>✓</Text>
-                )}
-                {index === currentStep && (
-                  <Text style={styles.currentStepNumber}>{index + 1}</Text>
-                )}
-                {index > currentStep && (
-                  <Text style={styles.pendingStepNumber}>{index + 1}</Text>
-                )}
-              </View>
-              <Text style={[
-                styles.stepLabel,
-                index === currentStep && styles.currentStepLabel,
-                index < currentStep && styles.completedStepLabel
-              ]}>
-                {step.title.split(':')[0]}
-              </Text>
-            </View>
-          ))}
+    <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => setSelectedNeedleType(null)}
+          >
+            <Text style={styles.backButtonText}>← 선택으로</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>
+            {selectedNeedleType === 'crochet' ? '코바늘 뜨개질' : '대바늘 뜨개질'}
+          </Text>
+          <View style={styles.placeholder} />
         </View>
-        
-        {/* Progress Bar */}
-        <View style={styles.progressBarContainer}>
-          <View style={styles.progressBarTrack}>
-            <View style={[
-              styles.progressBarFill,
-              { width: `${(currentStep / (steps.length - 1)) * 100}%` }
-            ]} />
+
+        {/* Enhanced Progress Indicator */}
+        <View style={styles.progressContainer}>
+          <View style={styles.progressTrack}>
+            {steps.map((step, index) => (
+              <View key={index} style={styles.progressStep}>
+                <View style={[
+                  styles.progressDot,
+                  index === currentStep && styles.currentProgressDot,
+                  index < currentStep && styles.completedProgressDot
+                ]}>
+                  {index < currentStep && (
+                    <Text style={styles.completedIcon}>✓</Text>
+                  )}
+                  {index === currentStep && (
+                    <Text style={styles.currentStepNumber}>{index + 1}</Text>
+                  )}
+                  {index > currentStep && (
+                    <Text style={styles.pendingStepNumber}>{index + 1}</Text>
+                  )}
+                </View>
+                <Text style={[
+                  styles.stepLabel,
+                  index === currentStep && styles.currentStepLabel,
+                  index < currentStep && styles.completedStepLabel
+                ]}>
+                  {step.title.split(':')[0]}
+                </Text>
+              </View>
+            ))}
+          </View>
+          
+          {/* Progress Bar */}
+          <View style={styles.progressBarContainer}>
+            <View style={styles.progressBarTrack}>
+              <View style={[
+                styles.progressBarFill,
+                { width: `${(currentStep / (steps.length - 1)) * 100}%` }
+              ]} />
+            </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
 
       <ScrollView 
         style={styles.content}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, {
+          paddingBottom: 120 // 버튼컨테이너 공간 확보
+        }]}
         showsVerticalScrollIndicator={false}
         bounces={true}
         keyboardShouldPersistTaps="handled"
@@ -415,8 +431,10 @@ const FirstKnittingScreen: React.FC = () => {
         </View>
       </ScrollView>
 
-      {/* Enhanced Navigation Buttons */}
-      <View style={styles.buttonContainer}>
+      {/* Enhanced Navigation Buttons - 절대 위치 고정 */}
+      <View style={[styles.buttonContainer, {
+        bottom: TAB_BAR_HEIGHT // 탭바 바로 위에 위치 (SafeArea는 탭바가 처리)
+      }]}>
         <TouchableOpacity
           style={[
             styles.button, 
@@ -446,13 +464,17 @@ const FirstKnittingScreen: React.FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FDF6E3',
+  },
+  safeArea: {
+    flex: 0, // SafeAreaView는 최소 크기만 차지
     backgroundColor: '#FDF6E3',
   },
   header: {
@@ -564,10 +586,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    backgroundColor: '#FDF6E3',
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 32,
+    // paddingBottom은 동적으로 계산됨
+  },
+  selectionScrollContent: {
+    padding: 16,
+    // paddingBottom은 동적으로 계산됨
   },
   stepHeader: {
     alignItems: 'center',
@@ -775,12 +802,16 @@ const styles = StyleSheet.create({
     lineHeight: 26,
   },
   buttonContainer: {
+    position: 'absolute', // 절대 위치로 고정
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#E2E8F0',
+    // bottom은 동적으로 계산됨
   },
   button: {
     flex: 1,
@@ -898,6 +929,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#0369A1',
     lineHeight: 20,
+  },
+  // 숨겨진 버튼 컨테이너 - 정확한 높이 맞춤용
+  hiddenButtonContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
+    opacity: 0, // 완전히 투명
+    pointerEvents: 'none', // 터치 이벤트 차단
   },
 });
 

@@ -255,6 +255,15 @@ export const AppNavigator: React.FC = () => {
             <Text style={{ fontSize: 22, color, fontWeight: 'bold' }}>⬟</Text>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // 패턴 탭을 누를 때마다 항상 PatternsList 화면으로 이동
+            e.preventDefault(); // 기본 탭 동작을 막음
+            navigation.navigate('Patterns', {
+              screen: 'PatternsList'
+            });
+          },
+        })}
       />
       <Tab.Screen
         name="Settings"
@@ -265,6 +274,15 @@ export const AppNavigator: React.FC = () => {
             <Text style={{ fontSize: 22, color, fontWeight: 'bold' }}>◎</Text>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // 설정 탭을 누를 때마다 항상 SettingsMain 화면으로 이동
+            e.preventDefault(); // 기본 탭 동작을 막음
+            navigation.navigate('Settings', {
+              screen: 'SettingsMain'
+            });
+          },
+        })}
       />
     </Tab.Navigator>
   );
