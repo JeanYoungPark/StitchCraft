@@ -123,9 +123,6 @@ const YouTubeCreditCard: React.FC<YouTubeCreditCardProps> = ({
           <View style={styles.productsContainer}>
             {creditInfo.productLinks.map((product, index) => (
               <View key={index} style={styles.productItem}>
-                <View style={styles.productBullet}>
-                  <Text style={styles.productBulletText}>{index + 1}</Text>
-                </View>
                 <View style={styles.productInfo}>
                   <Text style={styles.productTitle}>{product.title}</Text>
                   {product.description && (
@@ -336,16 +333,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   productsContainer: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F8FAFC',
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: '#E2E8F0',
   },
   productItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#F1F5F9',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   productBullet: {
     width: 24,
@@ -366,16 +371,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   productTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    color: '#2D3748',
+    color: '#1A202C',
     marginBottom: 4,
-    lineHeight: 22,
+    lineHeight: 20,
   },
   productDescription: {
-    fontSize: 14,
-    color: '#4A5568',
-    lineHeight: 20,
+    fontSize: 13,
+    color: '#718096',
+    lineHeight: 18,
   },
   productPrice: {
     fontSize: 13,

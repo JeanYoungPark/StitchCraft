@@ -48,7 +48,7 @@ class DatabaseManager {
   private readonly databaseVersion = '1.0';
   private readonly databaseDisplayName = 'StitchCraft Database';
   private readonly databaseSize = 200000;
-  private readonly currentDataVersion = '2.4'; // 패턴 데이터 버전 (채널명 수정)
+  private readonly currentDataVersion = '1.0'; // 패턴 데이터 버전 (홀리랜드 DIY키트 추가)
   private initPromise: Promise<void> | null = null;
 
   constructor() {
@@ -57,13 +57,7 @@ class DatabaseManager {
 
   // 데이터베이스 초기화 완료를 보장하는 메서드
   private async ensureInitialized(): Promise<void> {
-    console.log(
-      '🔄 ensureInitialized 시작, initPromise 존재:',
-      !!this.initPromise,
-    );
     if (this.initPromise) {
-      console.log('🔄 initPromise 대기 중...');
-
       try {
         // 10초 timeout을 설정
         const timeoutPromise = new Promise((_, reject) => {
@@ -71,29 +65,22 @@ class DatabaseManager {
         });
 
         await Promise.race([this.initPromise, timeoutPromise]);
-        console.log('✅ initPromise 완료됨');
       } catch (error) {
-        console.error('❌ initPromise 대기 중 오류:', error);
-        console.log('🔄 새로운 초기화 시도...');
+        console.error('데이터베이스 초기화 오류:', error);
 
         // 기존 initPromise 제거하고 새로 초기화
         this.initPromise = null;
         this.initPromise = this.initializeDatabase();
         await this.initPromise;
-        console.log('✅ 새로운 초기화 완료');
       }
     } else {
-      console.log('ℹ️ initPromise가 null임 - 새로운 초기화 시작');
       this.initPromise = this.initializeDatabase();
       await this.initPromise;
-      console.log('✅ 새로운 초기화 완료');
     }
   }
 
   private async initializeDatabase(): Promise<void> {
-    console.log('🔄 initializeDatabase 시작');
     try {
-      console.log('🔄 SQLite.openDatabase 호출 중...');
       this.database = await SQLite.openDatabase({
         name: this.databaseName,
         version: this.databaseVersion,
@@ -101,30 +88,19 @@ class DatabaseManager {
         size: this.databaseSize,
         location: 'default',
       });
-      console.log('✅ SQLite.openDatabase 완료');
 
-      console.log('🔄 createTables 호출 중...');
       await this.createTables();
-      console.log('✅ createTables 완료');
-
-      console.log('🔄 insertDefaultData 호출 중...');
       await this.insertDefaultData();
-      console.log('✅ insertDefaultData 완료');
-
-      console.log('✅ SQLite 데이터베이스 초기화 완료');
     } catch (error) {
-      console.error('❌ 데이터베이스 초기화 실패:', error);
-      console.error('❌ 초기화 실패 상세 정보:', {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-      });
+      console.error('데이터베이스 초기화 실패:', error);
       throw error;
     }
   }
 
   private async createTables(): Promise<void> {
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     const tables = [
       // 패턴 테이블
@@ -175,15 +151,15 @@ class DatabaseManager {
       await this.database.executeSql(
         'ALTER TABLE patterns ADD COLUMN youtube_credit TEXT',
       );
-      console.log('✅ YouTube 크레딧 필드 추가됨');
     } catch (error) {
       // 필드가 이미 존재하면 오류가 발생하지만 무시
-      console.log('ℹ️ YouTube 크레딧 필드는 이미 존재하거나 추가 불가');
     }
   }
 
   private async insertDefaultData(): Promise<void> {
-    if (!this.database) return;
+    if (!this.database) {
+      return;
+    }
 
     try {
       // 기본 앱 설정 생성
@@ -195,12 +171,10 @@ class DatabaseManager {
 
       for (const setting of settings) {
         await this.database.executeSql(
-          `INSERT OR IGNORE INTO app_settings (key, value) VALUES (?, ?)`,
+          'INSERT OR IGNORE INTO app_settings (key, value) VALUES (?, ?)',
           [setting.key, setting.value],
         );
       }
-
-      console.log('✅ 기본 앱 설정 생성됨');
 
       // 기본 패턴 데이터 생성
       await this.insertDefaultPatterns();
@@ -210,11 +184,11 @@ class DatabaseManager {
   }
 
   private async insertDefaultPatterns(): Promise<void> {
-    if (!this.database) return;
+    if (!this.database) {
+      return;
+    }
 
     try {
-      console.log('🔄 insertDefaultPatterns 시작');
-
       // 현재 저장된 데이터 버전 확인 (직접 SQL 사용해서 무한 재귀 방지)
       let currentVersion: string | null = null;
       try {
@@ -225,29 +199,17 @@ class DatabaseManager {
         if (result[0].rows.length > 0) {
           currentVersion = result[0].rows.item(0).value;
         }
-        console.log('📊 현재 패턴 데이터 버전:', currentVersion || '없음');
       } catch (error) {
-        console.log('ℹ️ 패턴 데이터 버전 조회 실패, 새로 생성:', error);
         currentVersion = null;
       }
 
       if (currentVersion !== this.currentDataVersion) {
-        console.log(
-          `🔄 패턴 데이터 업데이트 필요: ${currentVersion || '없음'} → ${
-            this.currentDataVersion
-          }`,
-        );
-
         // 기존 패턴 데이터 모두 삭제
         await this.database.executeSql('DELETE FROM patterns');
-        console.log('✅ 기존 패턴 데이터 삭제됨');
 
         // 새로운 패턴 데이터 삽입
-        console.log(`📊 삽입할 패턴 개수: ${defaultPatterns.length}`);
-
         for (let i = 0; i < defaultPatterns.length; i++) {
           const pattern = defaultPatterns[i];
-          console.log(`📝 패턴 ${i + 1} 삽입 중: ${pattern.patternId}`);
 
           try {
             await this.database.executeSql(
@@ -270,10 +232,8 @@ class DatabaseManager {
                 pattern.hasPattern ? 1 : 0,
               ],
             );
-            console.log(`✅ 패턴 ${i + 1} 삽입 성공: ${pattern.patternId}`);
           } catch (error) {
-            console.error(`❌ 패턴 ${i + 1} 삽입 실패:`, error);
-            console.error('패턴 데이터:', pattern);
+            console.error('패턴 삽입 실패:', error);
             throw error;
           }
         }
@@ -284,11 +244,6 @@ class DatabaseManager {
            VALUES (?, ?, CURRENT_TIMESTAMP)`,
           ['pattern_data_version', this.currentDataVersion],
         );
-        console.log(
-          `✅ 패턴 데이터 업데이트 완료: v${this.currentDataVersion}`,
-        );
-      } else {
-        console.log(`✅ 패턴 데이터가 최신 버전입니다: v${currentVersion}`);
       }
     } catch (error) {
       console.error('패턴 데이터 동기화 실패:', error);
@@ -298,7 +253,9 @@ class DatabaseManager {
   // 온보딩 상태 관리
   async isQuickStartCompleted(): Promise<boolean> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const result = await this.database.executeSql(
@@ -318,7 +275,9 @@ class DatabaseManager {
 
   async setQuickStartCompleted(): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       await this.database.executeSql(
@@ -327,7 +286,6 @@ class DatabaseManager {
         ['quick_start_completed', 'true'],
       );
 
-      console.log('✅ 빠른 시작 완료 상태 저장됨');
     } catch (error) {
       console.error('빠른 시작 상태 저장 실패:', error);
       throw error;
@@ -337,7 +295,9 @@ class DatabaseManager {
   // 측정 단위 관리 (간소화)
   async getMeasurementUnit(): Promise<'metric' | 'imperial'> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const result = await this.database.executeSql(
@@ -358,7 +318,9 @@ class DatabaseManager {
 
   async setMeasurementUnit(unit: 'metric' | 'imperial'): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       await this.database.executeSql(
@@ -367,7 +329,6 @@ class DatabaseManager {
         ['measurement_unit', unit],
       );
 
-      console.log('✅ 측정 단위 업데이트 완료');
     } catch (error) {
       console.error('측정 단위 업데이트 실패:', error);
       throw error;
@@ -377,11 +338,12 @@ class DatabaseManager {
   // 데이터베이스 초기화 (개발용)
   async clearAllPatterns(): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       await this.database.executeSql('DELETE FROM patterns');
-      console.log('모든 패턴 데이터가 삭제되었습니다.');
     } catch (error) {
       console.error('패턴 데이터 삭제 실패:', error);
       throw error;
@@ -390,58 +352,26 @@ class DatabaseManager {
 
   // 패턴 데이터 강제 업데이트 (앱 업데이트 시 사용)
   async forceUpdatePatterns(): Promise<void> {
-    console.log('🔄 패턴 데이터 강제 업데이트 시작...');
-
-    console.log('🔄 1단계: 데이터베이스 초기화 확인 중...');
     await this.ensureInitialized();
-    console.log('✅ 1단계: 데이터베이스 초기화 완료');
 
     if (!this.database) {
-      console.error('❌ 데이터베이스가 null입니다');
       throw new Error('데이터베이스가 초기화되지 않았습니다');
     }
-    console.log('✅ 데이터베이스 연결 확인됨');
 
     try {
-      console.log('🔄 2단계: 기존 패턴 데이터 삭제 중...');
       await this.database.executeSql('DELETE FROM patterns');
-      console.log('✅ 2단계: 기존 패턴 데이터 삭제 완료');
-
-      console.log('🔄 3단계: defaultPatterns 데이터 접근 중...');
-      console.log('defaultPatterns 타입:', typeof defaultPatterns);
-      console.log('defaultPatterns 배열인가?', Array.isArray(defaultPatterns));
 
       // 새로운 패턴 데이터 삽입
-      console.log(
-        `📊 강제 업데이트: 삽입할 패턴 개수: ${defaultPatterns.length}`,
-      );
-      console.log('✅ 3단계: defaultPatterns 접근 성공');
-
       for (let i = 0; i < defaultPatterns.length; i++) {
         const pattern = defaultPatterns[i];
-        console.log(
-          `📝 강제 업데이트: 패턴 ${i + 1} 삽입 중: ${pattern.patternId}`,
-        );
 
         try {
-          console.log('🔄 4단계: JSON 직렬화 시작...');
           const materialsJson = JSON.stringify(pattern.materials);
-          console.log('materials JSON 성공');
-
           const stepsJson = JSON.stringify(pattern.steps);
-          console.log('steps JSON 성공');
+          const youtubeCreditJson = pattern.youtubeCredit
+            ? JSON.stringify(pattern.youtubeCredit)
+            : null;
 
-          let youtubeCreditJson = null;
-          if (pattern.youtubeCredit) {
-            console.log('YouTube 크레딧 JSON 직렬화 중...');
-            youtubeCreditJson = JSON.stringify(pattern.youtubeCredit);
-            console.log('YouTube 크레딧 JSON 성공');
-          } else {
-            console.log('YouTube 크레딧 없음');
-          }
-          console.log('✅ 4단계: 모든 JSON 직렬화 완료');
-
-          console.log('🔄 5단계: SQL 삽입 실행 중...');
           await this.database.executeSql(
             `INSERT INTO patterns (pattern_id, title, difficulty, duration, description, materials, steps, emoji, video_url, youtube_credit, has_images, has_pattern)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -460,21 +390,14 @@ class DatabaseManager {
               pattern.hasPattern ? 1 : 0,
             ],
           );
-          console.log(
-            `✅ 5단계: 패턴 ${i + 1} 삽입 성공: ${pattern.patternId}`,
-          );
         } catch (error) {
-          console.error(`❌ 강제 업데이트: 패턴 ${i + 1} 삽입 실패:`, error);
-          console.error('패턴 데이터:', pattern);
+          console.error('강제 업데이트 패턴 삽입 실패:', error);
           throw error;
         }
       }
 
       // 데이터 버전 업데이트
       await this.setSetting('pattern_data_version', this.currentDataVersion);
-      console.log(
-        `✅ 패턴 데이터 강제 업데이트 완료: v${this.currentDataVersion}`,
-      );
     } catch (error) {
       console.error('패턴 데이터 강제 업데이트 실패:', error);
       throw error;
@@ -484,7 +407,9 @@ class DatabaseManager {
   // 패턴 관리
   async getPatterns(): Promise<Pattern[]> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const result = await this.database.executeSql(
@@ -523,7 +448,9 @@ class DatabaseManager {
 
   async getPatternById(patternId: string): Promise<Pattern | null> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const result = await this.database.executeSql(
@@ -562,7 +489,9 @@ class DatabaseManager {
   // 북마크 관리
   async getBookmarks(): Promise<Bookmark[]> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const result = await this.database.executeSql(
@@ -593,7 +522,9 @@ class DatabaseManager {
     bookmark: Omit<Bookmark, 'id' | 'createdAt'>,
   ): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       await this.database.executeSql(
@@ -607,7 +538,6 @@ class DatabaseManager {
         ],
       );
 
-      console.log('✅ 북마크 추가 완료');
     } catch (error) {
       console.error('북마크 추가 실패:', error);
       throw error;
@@ -616,7 +546,9 @@ class DatabaseManager {
 
   async removeBookmark(itemType: string, itemId: string): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       await this.database.executeSql(
@@ -624,7 +556,6 @@ class DatabaseManager {
         [itemType, itemId],
       );
 
-      console.log('✅ 북마크 제거 완료');
     } catch (error) {
       console.error('북마크 제거 실패:', error);
       throw error;
@@ -634,7 +565,9 @@ class DatabaseManager {
   // 앱 설정 관리
   async getSetting(key: string): Promise<string | null> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const result = await this.database.executeSql(
@@ -654,7 +587,9 @@ class DatabaseManager {
 
   async setSetting(key: string, value: string): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       await this.database.executeSql(
@@ -663,7 +598,6 @@ class DatabaseManager {
         [key, value],
       );
 
-      console.log('✅ 설정 저장 완료');
     } catch (error) {
       console.error('설정 저장 실패:', error);
       throw error;
@@ -673,7 +607,9 @@ class DatabaseManager {
   // 개발용 데이터베이스 상태 확인
   async debugDatabaseState(): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       console.log('=== 데이터베이스 디버깅 정보 ===');
@@ -725,7 +661,9 @@ class DatabaseManager {
   // 개발/테스트용 메서드
   async clearAllData(): Promise<void> {
     await this.ensureInitialized();
-    if (!this.database) throw new Error('데이터베이스가 초기화되지 않았습니다');
+    if (!this.database) {
+      throw new Error('데이터베이스가 초기화되지 않았습니다');
+    }
 
     try {
       const tables = ['patterns', 'bookmarks', 'app_settings'];
@@ -735,7 +673,6 @@ class DatabaseManager {
       }
 
       await this.insertDefaultData();
-      console.log('✅ 모든 데이터 초기화 완료');
     } catch (error) {
       console.error('데이터 초기화 실패:', error);
       throw error;
@@ -747,7 +684,6 @@ class DatabaseManager {
     if (this.database) {
       await this.database.close();
       this.database = null;
-      console.log('✅ 데이터베이스 연결 종료');
     }
   }
 }

@@ -300,14 +300,10 @@ const PatternDetailScreen: React.FC = () => {
                     width="100%"
                     videoId={getYoutubeVideoId(youtubeCredit.videoUrl)}
                     play={false}
-                    onChangeState={state => {
-                      console.log('YouTube player state:', state);
-                    }}
-                    onReady={() => {
-                      console.log('YouTube player ready');
-                    }}
-                    onError={error => {
-                      console.log('YouTube player error:', error);
+                    onChangeState={() => {}}
+                    onReady={() => {}}
+                    onError={() => {
+                      Alert.alert('오류', '영상을 불러올 수 없습니다.');
                     }}
                   />
                 </View>
@@ -414,14 +410,9 @@ const PatternDetailScreen: React.FC = () => {
                 width={screenWidth - 40}
                 videoId={currentVideoId}
                 play={true}
-                onChangeState={state => {
-                  console.log('YouTube player state:', state);
-                }}
-                onReady={() => {
-                  console.log('YouTube player ready');
-                }}
-                onError={error => {
-                  console.log('YouTube player error:', error);
+                onChangeState={() => {}}
+                onReady={() => {}}
+                onError={() => {
                   Alert.alert('오류', '영상을 불러올 수 없습니다.');
                 }}
               />
@@ -446,17 +437,22 @@ const PatternDetailScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8FAFC',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 12,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
+    borderBottomColor: '#F1F5F9',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   backButton: {
     padding: 8,
@@ -490,12 +486,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 0,
+    paddingBottom: 20,
   },
   patternInfo: {
     backgroundColor: '#FFFFFF',
     padding: 20,
-    marginBottom: 12,
+    marginBottom: 8,
+    borderRadius: 16,
+    marginHorizontal: 16,
+    marginTop: 16,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#F7FAFC',
   },
   patternTitle: {
     fontSize: 24,
@@ -527,8 +533,17 @@ const styles = StyleSheet.create({
   },
   sectionTabsContainer: {
     backgroundColor: '#FFFFFF',
-    marginBottom: 12,
+    marginBottom: 8,
+    marginHorizontal: 16,
+    borderRadius: 12,
     position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F7FAFC',
   },
   sectionTabs: {
     flexDirection: 'row',
@@ -567,7 +582,16 @@ const styles = StyleSheet.create({
   section: {
     backgroundColor: '#FFFFFF',
     padding: 20,
-    marginBottom: 12,
+    marginBottom: 8,
+    marginHorizontal: 16,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#F7FAFC',
   },
   sectionTitle: {
     fontSize: 20,
