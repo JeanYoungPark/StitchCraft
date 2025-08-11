@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -9,28 +9,33 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { databaseManager } from '../database/DatabaseManager';
-import { SettingsStackParamList } from '../navigation/AppNavigator';
+import {databaseManager} from '../database/DatabaseManager';
+import {SettingsStackParamList} from '../navigation/AppNavigator';
 import AdBanner from '../components/AdBanner';
 
-type SettingsScreenNavigationProp = StackNavigationProp<SettingsStackParamList, 'SettingsMain'>;
+type SettingsScreenNavigationProp = StackNavigationProp<
+  SettingsStackParamList,
+  'SettingsMain'
+>;
 
 const SettingsScreen: React.FC = () => {
   const navigation = useNavigation<SettingsScreenNavigationProp>();
   const scrollViewRef = useRef<ScrollView>(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+  const [databaseVersion, setDatabaseVersion] = useState<string>('');
 
   // 스크롤을 맨 위로 이동하는 함수
   const scrollToTop = useCallback(() => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    scrollViewRef.current?.scrollTo({y: 0, animated: true});
   }, []);
 
   // 탭 이벤트 리스너 등록 - Settings 탭 클릭 시 항상 스크롤을 맨 위로
   useEffect(() => {
-    const unsubscribe = navigation.getParent()?.addListener('tabPress', (e) => {
+    const unsubscribe = navigation.getParent()?.addListener('tabPress', e => {
       // Settings 탭이 클릭되면 항상 스크롤을 맨 위로 이동
       if (e.target?.includes('Settings')) {
         // 약간의 지연을 두어 네비게이션이 완료된 후 스크롤
@@ -49,15 +54,17 @@ const SettingsScreen: React.FC = () => {
   const loadSettings = async () => {
     try {
       setLoading(true);
-      // 추후 다른 설정들 로드 시 사용
+      // 데이터베이스 버전 로드
+      const dbVersion = await databaseManager.getSetting(
+        'pattern_data_version',
+      );
+      setDatabaseVersion(dbVersion || '없음');
     } catch (error) {
       console.error('설정 로드 실패:', error);
       Alert.alert('오류', '설정을 불러오는데 실패했습니다.');
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
-
 
   const handleContact = () => {
     navigation.navigate('Contact');
@@ -67,17 +74,40 @@ const SettingsScreen: React.FC = () => {
     navigation.navigate('Bookmarks');
   };
 
+  // 패턴 업데이트 함수
+  const handlePatternUpdate = async () => {
+    try {
+      setUpdating(true);
+      console.log('패턴 데이터 업데이트 시작...');
+      await databaseManager.forceUpdatePatterns();
+
+      // 데이터베이스 버전 다시 로드
+      const dbVersion = await databaseManager.getSetting(
+        'pattern_data_version',
+      );
+      setDatabaseVersion(dbVersion || '없음');
+
+      Alert.alert(
+        '완료',
+        '새로운 패턴이 업데이트되었습니다! 패턴 탭에서 확인해보세요.',
+      );
+    } catch (error) {
+      console.error('패턴 업데이트 실패:', error);
+      Alert.alert('오류', '패턴 업데이트에 실패했습니다.');
+    }
+    setUpdating(false);
+  };
 
   // 개발/테스트용 데이터 초기화 함수
   const handleResetData = () => {
     Alert.alert(
-      "데이터 초기화",
-      "모든 북마크와 설정이 초기화됩니다. 정말 진행하시겠습니까?",
+      '데이터 초기화',
+      '모든 북마크와 설정이 초기화됩니다. 정말 진행하시겠습니까?',
       [
-        { text: "취소", style: "cancel" },
-        { 
-          text: "초기화", 
-          style: "destructive",
+        {text: '취소', style: 'cancel'},
+        {
+          text: '초기화',
+          style: 'destructive',
           onPress: async () => {
             try {
               await databaseManager.clearAllData();
@@ -89,9 +119,9 @@ const SettingsScreen: React.FC = () => {
               console.error('데이터 초기화 실패:', error);
               Alert.alert('오류', '데이터 초기화에 실패했습니다.');
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   };
 
@@ -118,12 +148,16 @@ const SettingsScreen: React.FC = () => {
         {/* 북마크 섹션 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>북마크</Text>
-          
-          <TouchableOpacity style={styles.menuItem} onPress={handleViewBookmarks}>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleViewBookmarks}>
             <View style={styles.menuLeft}>
               <View style={styles.menuText}>
                 <Text style={styles.menuTitle}>내 북마크</Text>
-                <Text style={styles.menuDescription}>저장한 패턴과 튜토리얼</Text>
+                <Text style={styles.menuDescription}>
+                  저장한 패턴과 튜토리얼
+                </Text>
               </View>
             </View>
             <Text style={styles.menuArrow}>›</Text>
@@ -133,7 +167,30 @@ const SettingsScreen: React.FC = () => {
         {/* 설정 섹션 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>앱 설정</Text>
-          
+
+          <TouchableOpacity
+            style={[
+              styles.menuItem,
+              updating === true && styles.disabledMenuItem,
+            ]}
+            onPress={handlePatternUpdate}
+            disabled={updating === true}>
+            <View style={styles.menuLeft}>
+              <View style={styles.menuText}>
+                <Text style={styles.menuTitle}>패턴 업데이트</Text>
+                <Text style={styles.menuDescription}>
+                  {updating === true
+                    ? '업데이트 중...'
+                    : '새로운 패턴 확인하기'}
+                </Text>
+              </View>
+            </View>
+            {updating === true ? (
+              <ActivityIndicator size="small" color="#6B73FF" />
+            ) : (
+              <Text style={styles.menuArrow}>›</Text>
+            )}
+          </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={handleContact}>
             <View style={styles.menuLeft}>
@@ -146,11 +203,13 @@ const SettingsScreen: React.FC = () => {
           </TouchableOpacity>
 
           {/* 개발/테스트용 데이터 초기화 버튼 */}
-          {__DEV__ && (
+          {__DEV__ === true && (
             <TouchableOpacity style={styles.menuItem} onPress={handleResetData}>
               <View style={styles.menuLeft}>
                 <View style={styles.menuText}>
-                  <Text style={[styles.menuTitle, styles.dangerText]}>데이터 초기화</Text>
+                  <Text style={[styles.menuTitle, styles.dangerText]}>
+                    데이터 초기화
+                  </Text>
                   <Text style={styles.menuDescription}>개발/테스트용</Text>
                 </View>
               </View>
@@ -167,7 +226,7 @@ const SettingsScreen: React.FC = () => {
           </Text>
         </View>
       </ScrollView>
-      
+
       {/* 하단 배너 광고 */}
       <AdBanner />
     </SafeAreaView>
@@ -212,10 +271,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     marginHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 30,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.08,
     shadowRadius: 6,
     borderWidth: 1,
@@ -265,6 +324,9 @@ const styles = StyleSheet.create({
   },
   dangerText: {
     color: '#DC2626',
+  },
+  disabledMenuItem: {
+    opacity: 0.6,
   },
   appInfo: {
     alignItems: 'center',

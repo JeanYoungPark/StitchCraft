@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,23 +12,29 @@ import {
   Platform,
   Linking,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 // Navigation types
 type ContactScreenNavigationProp = StackNavigationProp<any>;
 
 const ContactScreen: React.FC = () => {
   const navigation = useNavigation<ContactScreenNavigationProp>();
-  const [selectedType, setSelectedType] = useState<'bug' | 'suggestion' | 'question' | ''>('');
+  const [selectedType, setSelectedType] = useState<
+    'bug' | 'suggestion' | 'question' | ''
+  >('');
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
 
   const contactTypes = [
-    { id: 'bug', title: '버그 신고', description: '앱에서 발생한 오류나 문제점' },
-    { id: 'suggestion', title: '기능 제안', description: '새로운 기능이나 개선 아이디어' },
-    { id: 'question', title: '사용 문의', description: '앱 사용법에 대한 질문' },
+    {id: 'bug', title: '버그 신고', description: '앱에서 발생한 오류나 문제점'},
+    {
+      id: 'suggestion',
+      title: '기능 제안',
+      description: '새로운 기능이나 개선 아이디어',
+    },
+    {id: 'question', title: '사용 문의', description: '앱 사용법에 대한 질문'},
   ];
 
   const handleTypeSelect = (type: 'bug' | 'suggestion' | 'question') => {
@@ -53,7 +59,9 @@ const ContactScreen: React.FC = () => {
     try {
       // 이메일 앱을 통한 문의 전송
       const selectedTypeInfo = getSelectedTypeInfo();
-      const subject = encodeURIComponent(`[StitchCraft] ${selectedTypeInfo?.title}: ${title.trim()}`);
+      const subject = encodeURIComponent(
+        `[StitchCraft] ${selectedTypeInfo?.title}: ${title.trim()}`,
+      );
       const body = encodeURIComponent(`
 문의 유형: ${selectedTypeInfo?.title}
 제목: ${title.trim()}
@@ -67,14 +75,14 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
 앱 정보: StitchCraft v1.0.0
 전송 시간: ${new Date().toLocaleString('ko-KR')}
       `);
-      
+
       // TODO: 실제 사용할 이메일 주소로 변경 필요
       const emailUrl = `mailto:your-email@example.com?subject=${subject}&body=${body}`;
-      
+
       const supported = await Linking.canOpenURL(emailUrl);
       if (supported) {
         await Linking.openURL(emailUrl);
-        
+
         // 이메일 앱이 열린 후 폼 초기화
         setTimeout(() => {
           Alert.alert(
@@ -90,18 +98,16 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
                   setMessage('');
                   setEmail('');
                   navigation.goBack();
-                }
-              }
-            ]
+                },
+              },
+            ],
           );
         }, 500);
       } else {
         Alert.alert(
           '이메일 앱 없음',
           '기기에 설정된 이메일 앱이 없습니다.\n다음 정보를 직접 이메일로 보내주세요:\n\nyour-email@example.com',
-          [
-            { text: '확인' }
-          ]
+          [{text: '확인'}],
         );
       }
     } catch (error) {
@@ -118,20 +124,18 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>← 돌아가기</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>문의하기</Text>
         <View style={styles.headerPlaceholder} />
       </View>
 
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {/* 안내 메시지 */}
           <View style={styles.introSection}>
@@ -146,25 +150,31 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>문의 유형</Text>
             <View style={styles.typeGrid}>
-              {contactTypes.map((type) => (
+              {contactTypes.map(type => (
                 <TouchableOpacity
                   key={type.id}
                   style={[
                     styles.typeCard,
-                    selectedType === type.id && styles.selectedTypeCard
+                    selectedType === type.id && styles.selectedTypeCard,
                   ]}
-                  onPress={() => handleTypeSelect(type.id as 'bug' | 'suggestion' | 'question')}
-                >
-                  <Text style={[
-                    styles.typeTitle,
-                    selectedType === type.id && styles.selectedTypeTitle
-                  ]}>
+                  onPress={() =>
+                    handleTypeSelect(
+                      type.id as 'bug' | 'suggestion' | 'question',
+                    )
+                  }>
+                  <Text
+                    style={[
+                      styles.typeTitle,
+                      selectedType === type.id && styles.selectedTypeTitle,
+                    ]}>
                     {type.title}
                   </Text>
-                  <Text style={[
-                    styles.typeDescription,
-                    selectedType === type.id && styles.selectedTypeDescription
-                  ]}>
+                  <Text
+                    style={[
+                      styles.typeDescription,
+                      selectedType === type.id &&
+                        styles.selectedTypeDescription,
+                    ]}>
                     {type.description}
                   </Text>
                 </TouchableOpacity>
@@ -177,9 +187,10 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
             <Text style={styles.sectionTitle}>제목</Text>
             <TextInput
               style={styles.titleInput}
-              placeholder={selectedType ? 
-                `${getSelectedTypeInfo()?.title} 제목을 입력해주세요` : 
-                '문의 제목을 입력해주세요'
+              placeholder={
+                selectedType
+                  ? `${getSelectedTypeInfo()?.title} 제목을 입력해주세요`
+                  : '문의 제목을 입력해주세요'
               }
               placeholderTextColor="#A0ADB8"
               value={title}
@@ -194,13 +205,14 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
             <Text style={styles.sectionTitle}>내용</Text>
             <TextInput
               style={styles.messageInput}
-              placeholder={selectedType === 'bug' ? 
-                '발생한 문제와 상황을 자세히 설명해주세요.\n예: 언제, 어떤 동작에서 문제가 발생했는지' :
-                selectedType === 'suggestion' ?
-                '어떤 기능이 있으면 좋을지 자세히 설명해주세요.\n예: 사용 시나리오, 기대 효과 등' :
-                selectedType === 'question' ?
-                '앱 사용법에 대해 궁금한 점을 자세히 설명해주세요.\n예: 어떤 기능을 어떻게 사용하는지' :
-                '문의 내용을 자세히 작성해주세요'
+              placeholder={
+                selectedType === 'bug'
+                  ? '발생한 문제와 상황을 자세히 설명해주세요.\n예: 언제, 어떤 동작에서 문제가 발생했는지'
+                  : selectedType === 'suggestion'
+                  ? '어떤 기능이 있으면 좋을지 자세히 설명해주세요.\n예: 사용 시나리오, 기대 효과 등'
+                  : selectedType === 'question'
+                  ? '앱 사용법에 대해 궁금한 점을 자세히 설명해주세요.\n예: 어떤 기능을 어떻게 사용하는지'
+                  : '문의 내용을 자세히 작성해주세요'
               }
               placeholderTextColor="#A0ADB8"
               value={message}
@@ -215,7 +227,9 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
 
           {/* 이메일 입력 (선택사항) */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>이메일 <Text style={styles.optional}>(선택사항)</Text></Text>
+            <Text style={styles.sectionTitle}>
+              이메일 <Text style={styles.optional}>(선택사항)</Text>
+            </Text>
             <TextInput
               style={styles.emailInput}
               placeholder="답변을 받을 이메일 주소를 입력해주세요"
@@ -235,15 +249,17 @@ ${email.trim() ? `연락처: ${email.trim()}` : '연락처: 없음'}
           <TouchableOpacity
             style={[
               styles.submitButton,
-              (!selectedType || !title.trim() || !message.trim()) && styles.disabledButton
+              (!selectedType || !title.trim() || !message.trim()) &&
+                styles.disabledButton,
             ]}
             onPress={handleSubmit}
-            disabled={!selectedType || !title.trim() || !message.trim()}
-          >
-            <Text style={[
-              styles.submitButtonText,
-              (!selectedType || !title.trim() || !message.trim()) && styles.disabledButtonText
-            ]}>
+            disabled={!selectedType || !title.trim() || !message.trim()}>
+            <Text
+              style={[
+                styles.submitButtonText,
+                (!selectedType || !title.trim() || !message.trim()) &&
+                  styles.disabledButtonText,
+              ]}>
               문의하기
             </Text>
           </TouchableOpacity>
@@ -304,7 +320,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },
@@ -344,7 +360,7 @@ const styles = StyleSheet.create({
     borderColor: '#E2E8F0',
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },

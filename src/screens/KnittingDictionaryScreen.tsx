@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -9,34 +9,37 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { knittingTermsData, KnittingTerm } from '../data/KnittingDictionaryData';
+import {useNavigation} from '@react-navigation/native';
+import {knittingTermsData, KnittingTerm} from '../data/KnittingDictionaryData';
 import AdBanner from '../components/AdBanner';
 
 const KnittingDictionaryScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'basic' | 'stitch' | 'tool' | 'technique' | 'material'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<
+    'all' | 'basic' | 'stitch' | 'tool' | 'technique' | 'material'
+  >('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [expandedTerms, setExpandedTerms] = useState<Set<string>>(new Set());
 
-
   const categories = [
-    { key: 'all' as const, label: '전체' },
-    { key: 'basic' as const, label: '기본' },
-    { key: 'stitch' as const, label: '뜨기법' },
-    { key: 'tool' as const, label: '도구' },
-    { key: 'technique' as const, label: '기법' },
-    { key: 'material' as const, label: '재료' },
+    {key: 'all' as const, label: '전체'},
+    {key: 'basic' as const, label: '기본'},
+    {key: 'stitch' as const, label: '뜨기법'},
+    {key: 'tool' as const, label: '도구'},
+    {key: 'technique' as const, label: '기법'},
+    {key: 'material' as const, label: '재료'},
   ];
 
   const filteredTerms = useMemo(() => {
     return knittingTermsData.filter(term => {
-      const matchesCategory = selectedCategory === 'all' || term.category === selectedCategory;
-      const matchesSearch = searchQuery === '' || 
+      const matchesCategory =
+        selectedCategory === 'all' || term.category === selectedCategory;
+      const matchesSearch =
+        searchQuery === '' ||
         term.korean.toLowerCase().includes(searchQuery.toLowerCase()) ||
         term.english.toLowerCase().includes(searchQuery.toLowerCase()) ||
         term.definition.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       return matchesCategory && matchesSearch;
     });
   }, [selectedCategory, searchQuery]);
@@ -53,23 +56,31 @@ const KnittingDictionaryScreen: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return { bg: '#F0FDF4', text: '#15803D' };
-      case 'intermediate': return { bg: '#FFFBF0', text: '#D97706' };
-      case 'advanced': return { bg: '#FEF2F2', text: '#DC2626' };
-      default: return { bg: '#F0FDF4', text: '#15803D' };
+      case 'beginner':
+        return {bg: '#F0FDF4', text: '#15803D'};
+      case 'intermediate':
+        return {bg: '#FFFBF0', text: '#D97706'};
+      case 'advanced':
+        return {bg: '#FEF2F2', text: '#DC2626'};
+      default:
+        return {bg: '#F0FDF4', text: '#15803D'};
     }
   };
 
   const getDifficultyLabel = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return '초급';
-      case 'intermediate': return '중급';
-      case 'advanced': return '고급';
-      default: return '초급';
+      case 'beginner':
+        return '초급';
+      case 'intermediate':
+        return '중급';
+      case 'advanced':
+        return '고급';
+      default:
+        return '초급';
     }
   };
 
-  const renderTerm = ({ item }: { item: KnittingTerm }) => {
+  const renderTerm = ({item}: {item: KnittingTerm}) => {
     const isExpanded = expandedTerms.has(item.id);
     const difficultyColors = getDifficultyColor(item.difficulty);
 
@@ -77,13 +88,17 @@ const KnittingDictionaryScreen: React.FC = () => {
       <TouchableOpacity
         style={styles.termCard}
         onPress={() => toggleExpanded(item.id)}
-        activeOpacity={0.7}
-      >
+        activeOpacity={0.7}>
         <View style={styles.termHeader}>
           <View style={styles.termTitleRow}>
             <Text style={styles.termKorean}>{item.korean}</Text>
-            <View style={[styles.difficultyBadge, { backgroundColor: difficultyColors.bg }]}>
-              <Text style={[styles.difficultyText, { color: difficultyColors.text }]}>
+            <View
+              style={[
+                styles.difficultyBadge,
+                {backgroundColor: difficultyColors.bg},
+              ]}>
+              <Text
+                style={[styles.difficultyText, {color: difficultyColors.text}]}>
                 {getDifficultyLabel(item.difficulty)}
               </Text>
             </View>
@@ -91,12 +106,16 @@ const KnittingDictionaryScreen: React.FC = () => {
           <View style={styles.termEnglishRow}>
             <Text style={styles.termEnglish}>{item.english}</Text>
             {item.pronunciation && (
-              <Text style={styles.termPronunciation}>[{item.pronunciation}]</Text>
+              <Text style={styles.termPronunciation}>
+                [{item.pronunciation}]
+              </Text>
             )}
           </View>
         </View>
 
-        <Text style={styles.termDefinition} numberOfLines={isExpanded ? undefined : 2}>
+        <Text
+          style={styles.termDefinition}
+          numberOfLines={isExpanded ? undefined : 2}>
           {item.definition}
         </Text>
 
@@ -108,7 +127,7 @@ const KnittingDictionaryScreen: React.FC = () => {
                 <Text style={styles.exampleText}>{item.example}</Text>
               </View>
             )}
-            
+
             {item.relatedTerms && item.relatedTerms.length > 0 && (
               <View style={styles.relatedSection}>
                 <Text style={styles.relatedTitle}>관련 용어</Text>
@@ -135,10 +154,9 @@ const KnittingDictionaryScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>← 돌아가기</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>뜨개질 용어 사전</Text>
@@ -166,24 +184,23 @@ const KnittingDictionaryScreen: React.FC = () => {
 
       {/* Category Filter */}
       <View style={styles.filterContainer}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={styles.filterContent}
-        >
-          {categories.map((category) => (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterContent}>
+          {categories.map(category => (
             <TouchableOpacity
               key={category.key}
               style={[
                 styles.filterChip,
-                selectedCategory === category.key && styles.activeFilterChip
+                selectedCategory === category.key && styles.activeFilterChip,
               ]}
-              onPress={() => setSelectedCategory(category.key)}
-            >
-              <Text style={[
-                styles.filterText,
-                selectedCategory === category.key && styles.activeFilterText
-              ]}>
+              onPress={() => setSelectedCategory(category.key)}>
+              <Text
+                style={[
+                  styles.filterText,
+                  selectedCategory === category.key && styles.activeFilterText,
+                ]}>
                 {category.label}
               </Text>
             </TouchableOpacity>
@@ -193,20 +210,18 @@ const KnittingDictionaryScreen: React.FC = () => {
 
       {/* Results Info */}
       <View style={styles.resultsInfo}>
-        <Text style={styles.resultsText}>
-          {filteredTerms.length}개의 용어
-        </Text>
+        <Text style={styles.resultsText}>{filteredTerms.length}개의 용어</Text>
       </View>
 
       {/* Terms List */}
       <FlatList
         data={filteredTerms}
         renderItem={renderTerm}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.termsList}
       />
-      
+
       {/* 하단 배너 광고 */}
       <AdBanner />
     </SafeAreaView>
@@ -331,7 +346,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
     position: 'relative',

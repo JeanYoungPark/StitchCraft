@@ -3,17 +3,18 @@
 ## 1. 동적 헤더 컴포넌트 설계
 
 ### A. 시간 기반 인사말
+
 ```typescript
 const DynamicHeader = () => {
   const getTimeBasedGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return { text: "좋은 아침이에요!", emoji: "☀️" };
-    if (hour < 18) return { text: "오늘도 뜨개질해요!", emoji: "🌤️" };
-    return { text: "편안한 저녁시간!", emoji: "🌙" };
+    if (hour < 12) return {text: '좋은 아침이에요!', emoji: '☀️'};
+    if (hour < 18) return {text: '오늘도 뜨개질해요!', emoji: '🌤️'};
+    return {text: '편안한 저녁시간!', emoji: '🌙'};
   };
-  
+
   const greeting = getTimeBasedGreeting();
-  
+
   return (
     <View style={styles.dynamicHeader}>
       <Text style={styles.greetingEmoji}>{greeting.emoji}</Text>
@@ -25,8 +26,9 @@ const DynamicHeader = () => {
 ```
 
 ### B. 진행 상황 기반 헤더
+
 ```typescript
-const ProgressHeader = ({ isQuickStartCompleted, bookmarkCount }) => {
+const ProgressHeader = ({isQuickStartCompleted, bookmarkCount}) => {
   if (!isQuickStartCompleted) {
     return (
       <View style={styles.progressHeader}>
@@ -36,15 +38,15 @@ const ProgressHeader = ({ isQuickStartCompleted, bookmarkCount }) => {
       </View>
     );
   }
-  
+
   return (
     <View style={styles.progressHeader}>
       <Text style={styles.progressEmoji}>⭐</Text>
       <Text style={styles.progressTitle}>훌륭해요!</Text>
       <Text style={styles.progressSubtext}>
-        {bookmarkCount > 0 
-          ? `${bookmarkCount}개의 패턴을 저장했어요` 
-          : "새로운 패턴을 탐색해보세요"}
+        {bookmarkCount > 0
+          ? `${bookmarkCount}개의 패턴을 저장했어요`
+          : '새로운 패턴을 탐색해보세요'}
       </Text>
     </View>
   );
@@ -54,24 +56,30 @@ const ProgressHeader = ({ isQuickStartCompleted, bookmarkCount }) => {
 ## 2. 컨텍스트 인식 카드 시스템
 
 ### A. 날씨/계절 기반 추천
+
 ```typescript
 const SeasonalCard = () => {
   const getSeason = () => {
     const month = new Date().getMonth() + 1;
-    if (month >= 3 && month <= 5) return { season: "봄", items: ["가벼운 가디건", "코튼 스카프"] };
-    if (month >= 6 && month <= 8) return { season: "여름", items: ["시원한 탑", "해변 가방"] };
-    if (month >= 9 && month <= 11) return { season: "가을", items: ["따뜻한 스웨터", "모자"] };
-    return { season: "겨울", items: ["두꺼운 목도리", "장갑"] };
+    if (month >= 3 && month <= 5)
+      return {season: '봄', items: ['가벼운 가디건', '코튼 스카프']};
+    if (month >= 6 && month <= 8)
+      return {season: '여름', items: ['시원한 탑', '해변 가방']};
+    if (month >= 9 && month <= 11)
+      return {season: '가을', items: ['따뜻한 스웨터', '모자']};
+    return {season: '겨울', items: ['두꺼운 목도리', '장갑']};
   };
-  
-  const { season, items } = getSeason();
-  
+
+  const {season, items} = getSeason();
+
   return (
     <View style={styles.seasonalCard}>
       <Text style={styles.seasonBadge}>{season} 추천</Text>
       <Text style={styles.seasonTitle}>{season}에 어울리는 뜨개</Text>
       {items.map((item, index) => (
-        <Text key={index} style={styles.seasonItem}>• {item}</Text>
+        <Text key={index} style={styles.seasonItem}>
+          • {item}
+        </Text>
       ))}
     </View>
   );
@@ -79,20 +87,33 @@ const SeasonalCard = () => {
 ```
 
 ### B. 학습 단계별 가이드
+
 ```typescript
-const LearningPath = ({ completedTutorials, bookmarkCount }) => {
+const LearningPath = ({completedTutorials, bookmarkCount}) => {
   const getNextStep = () => {
     if (completedTutorials.length === 0) {
-      return { step: "기초", title: "뜨개질 첫걸음", desc: "기본기부터 차근차근" };
+      return {
+        step: '기초',
+        title: '뜨개질 첫걸음',
+        desc: '기본기부터 차근차근',
+      };
     }
     if (bookmarkCount < 3) {
-      return { step: "탐색", title: "패턴 찾아보기", desc: "마음에 드는 패턴을 저장해보세요" };
+      return {
+        step: '탐색',
+        title: '패턴 찾아보기',
+        desc: '마음에 드는 패턴을 저장해보세요',
+      };
     }
-    return { step: "실전", title: "작품 만들기", desc: "저장한 패턴으로 실제 작품을 만들어보세요" };
+    return {
+      step: '실전',
+      title: '작품 만들기',
+      desc: '저장한 패턴으로 실제 작품을 만들어보세요',
+    };
   };
-  
+
   const nextStep = getNextStep();
-  
+
   return (
     <View style={styles.learningPath}>
       <Text style={styles.pathBadge}>{nextStep.step} 단계</Text>
@@ -106,7 +127,7 @@ const LearningPath = ({ completedTutorials, bookmarkCount }) => {
 ## 3. 미니멀 통계 대시보드
 
 ```typescript
-const StatsCards = ({ stats }) => (
+const StatsCards = ({stats}) => (
   <View style={styles.statsContainer}>
     <View style={styles.statCard}>
       <Text style={styles.statNumber}>{stats.completedProjects}</Text>
@@ -150,7 +171,7 @@ const enhancedStyles = StyleSheet.create({
     color: '#718096',
     opacity: 0.8,
   },
-  
+
   // 컨텍스트 카드
   seasonalCard: {
     backgroundColor: '#F0F9FF',
@@ -160,7 +181,7 @@ const enhancedStyles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: '#3B82F6',
   },
-  
+
   // 통계 카드
   statsContainer: {
     flexDirection: 'row',
@@ -194,14 +215,14 @@ const enhancedStyles = StyleSheet.create({
 ```typescript
 const AccessibilityEnhancements = {
   dynamicHeader: {
-    accessibilityRole: "header",
-    accessibilityLabel: "홈 화면 헤더",
-    accessibilityHint: "현재 시간과 추천 정보를 제공합니다"
+    accessibilityRole: 'header',
+    accessibilityLabel: '홈 화면 헤더',
+    accessibilityHint: '현재 시간과 추천 정보를 제공합니다',
   },
   seasonalCard: {
-    accessibilityRole: "button",
-    accessibilityLabel: "계절별 추천 패턴",
-    accessibilityHint: "현재 계절에 어울리는 뜨개질 패턴을 확인할 수 있습니다"
-  }
+    accessibilityRole: 'button',
+    accessibilityLabel: '계절별 추천 패턴',
+    accessibilityHint: '현재 계절에 어울리는 뜨개질 패턴을 확인할 수 있습니다',
+  },
 };
 ```

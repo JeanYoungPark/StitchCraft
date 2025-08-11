@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,33 +8,36 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdBanner from '../components/AdBanner';
 
-const { height: screenHeight } = Dimensions.get('window');
+const {height: screenHeight} = Dimensions.get('window');
 const TAB_BAR_HEIGHT = 60; // 앱 네비게이터에서 정의된 탭바 높이
 
 const FirstKnittingScreen: React.FC = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedNeedleType, setSelectedNeedleType] = useState<'crochet' | 'knitting' | null>(null);
+  const [selectedNeedleType, setSelectedNeedleType] = useState<
+    'crochet' | 'knitting' | null
+  >(null);
 
   // 코바늘 가이드
   const crochetSteps = [
     {
       title: '1단계: 준비하기',
       emoji: '🧶',
-      description: '코바늘 뜨개질을 시작하기 전에 필요한 도구와 재료를 알아봅시다.',
+      description:
+        '코바늘 뜨개질을 시작하기 전에 필요한 도구와 재료를 알아봅시다.',
       content: [
         '🪝 코바늘 1개 준비 (초보자용 5-6mm 추천)',
         '🧶 면실 또는 아크릴실 준비 (두꺼운 실 추천)',
         '📏 코바늘 사이즈와 실 두께를 맞춰주세요',
         '✋ 편안한 자세로 앉으세요',
-        '💡 충분한 조명을 확인하세요'
-      ]
+        '💡 충분한 조명을 확인하세요',
+      ],
     },
     {
       title: '2단계: 슬립노트 만들기',
@@ -45,8 +48,8 @@ const FirstKnittingScreen: React.FC = () => {
         '2️⃣ 실로 고리를 만들고 코바늘을 통과시키세요',
         '3️⃣ 고리를 조여서 첫번째 슬립노트를 완성하세요',
         '4️⃣ 너무 조이지 않게 주의하세요',
-        '✅ 이것이 모든 코바늘 작업의 시작점입니다'
-      ]
+        '✅ 이것이 모든 코바늘 작업의 시작점입니다',
+      ],
     },
     {
       title: '3단계: 기본 사슬뜨기',
@@ -57,9 +60,9 @@ const FirstKnittingScreen: React.FC = () => {
         '⬆️ 사슬노트에 코바늘을 넣으세요',
         '🔄 실을 코바늘에 감아주세요',
         '⬇️ 새로운 고리를 뽑아내세요',
-        '✨ 축하합니다! 첫 번째 사슬 완성!'
-      ]
-    }
+        '✨ 축하합니다! 첫 번째 사슬 완성!',
+      ],
+    },
   ];
 
   // 대바늘 가이드
@@ -67,14 +70,15 @@ const FirstKnittingScreen: React.FC = () => {
     {
       title: '1단계: 준비하기',
       emoji: '🧶',
-      description: '대바늘 뜨개질을 시작하기 전에 필요한 도구와 재료를 알아봅시다.',
+      description:
+        '대바늘 뜨개질을 시작하기 전에 필요한 도구와 재료를 알아봅시다.',
       content: [
         '🪡 대바늘 2개 준비 (초보자용 8-10mm 추천)',
         '🧶 면실 또는 아크릴실 준비 (두꺼운 실 추천)',
         '📏 바늘 굵기와 실 두께를 맞춰주세요',
         '✋ 편안한 자세로 앉으세요',
-        '💡 충분한 조명을 확인하세요'
-      ]
+        '💡 충분한 조명을 확인하세요',
+      ],
     },
     {
       title: '2단계: 코 만들기',
@@ -85,8 +89,8 @@ const FirstKnittingScreen: React.FC = () => {
         '2️⃣ 바늘에 털실을 걸어 고리를 만드세요',
         '3️⃣ 고리를 조여서 첫 번째 코를 완성하세요',
         '4️⃣ 같은 방식으로 10개의 코를 만드세요',
-        '✅ 코들이 너무 조이지 않게 주의하세요'
-      ]
+        '✅ 코들이 너무 조이지 않게 주의하세요',
+      ],
     },
     {
       title: '3단계: 첫 번째 줄 뜨기',
@@ -97,9 +101,9 @@ const FirstKnittingScreen: React.FC = () => {
         '⬆️ 첫 번째 코에 바늘을 넣으세요',
         '🔄 털실을 바늘에 감아주세요',
         '⬇️ 새로운 고리를 빼내세요',
-        '✨ 축하합니다! 첫 번째 뜨기 완성!'
-      ]
-    }
+        '✨ 축하합니다! 첫 번째 뜨기 완성!',
+      ],
+    },
   ];
 
   const steps = selectedNeedleType === 'crochet' ? crochetSteps : knittingSteps;
@@ -141,42 +145,36 @@ const FirstKnittingScreen: React.FC = () => {
   // 바늘 선택 화면
   if (!selectedNeedleType) {
     return (
-      <View style={styles.container}>
-        <SafeAreaView style={styles.safeArea}>
-          <View style={styles.header}>
-            <TouchableOpacity 
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Text style={styles.backButtonText}>← 돌아가기</Text>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>뜨개질 방법 선택</Text>
-            <View style={styles.placeholder} />
-          </View>
-        </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            <Text style={styles.backButtonText}>← 돌아가기</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>뜨개질 방법 선택</Text>
+          <View style={styles.placeholder} />
+        </View>
 
-        <ScrollView 
-          style={[styles.content, { flex: 1 }]} // flex: 1 추가로 스크롤 공간 확보
-          contentContainerStyle={[styles.selectionScrollContent, {
-            paddingBottom: TAB_BAR_HEIGHT + 20, // 탭바 높이 + 여백
-            flexGrow: 1 // 콘텐츠가 화면을 채우도록
-          }]}
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={styles.selectionScrollContent}
           showsVerticalScrollIndicator={false}
-          bounces={true}
-        >
+          bounces={true}>
           <View style={styles.selectionHeader}>
-            <Text style={styles.selectionTitle}>어떤 뜨개질을 배우고 싶나요?</Text>
+            <Text style={styles.selectionTitle}>
+              어떤 뜨개질을 배우고 싶나요?
+            </Text>
             <Text style={styles.selectionSubtitle}>
               바늘 종류에 따라 뜨개질 방법이 달라요
             </Text>
           </View>
 
           <View style={styles.needleOptions}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.needleOption}
               onPress={() => handleNeedleSelection('knitting')}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <View style={styles.needleIcon}>
                 <Text style={styles.needleEmoji}>🪡</Text>
               </View>
@@ -185,17 +183,18 @@ const FirstKnittingScreen: React.FC = () => {
                 직선 바늘 2개를 사용하는 전통적인 뜨개질
               </Text>
               <View style={styles.needleFeatures}>
-                <Text style={styles.featureText}>• 스카프, 목도리, 스웨터 만들기</Text>
+                <Text style={styles.featureText}>
+                  • 스카프, 목도리, 스웨터 만들기
+                </Text>
                 <Text style={styles.featureText}>• 평면적인 뜨개 작품</Text>
                 <Text style={styles.featureText}>• 초보자에게 추천</Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.needleOption}
               onPress={() => handleNeedleSelection('crochet')}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <View style={styles.needleIcon}>
                 <Text style={styles.needleEmoji}>🪝</Text>
               </View>
@@ -204,7 +203,9 @@ const FirstKnittingScreen: React.FC = () => {
                 갈고리 모양 바늘 1개를 사용하는 뜨개질
               </Text>
               <View style={styles.needleFeatures}>
-                <Text style={styles.featureText}>• 가방, 모자, 인형 만들기</Text>
+                <Text style={styles.featureText}>
+                  • 가방, 모자, 인형 만들기
+                </Text>
                 <Text style={styles.featureText}>• 입체적인 뜨개 작품</Text>
                 <Text style={styles.featureText}>• 빠른 진행 속도</Text>
               </View>
@@ -218,10 +219,10 @@ const FirstKnittingScreen: React.FC = () => {
             </Text>
           </View>
         </ScrollView>
-        
+
         {/* 하단 배너 광고 */}
         <AdBanner />
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -232,14 +233,15 @@ const FirstKnittingScreen: React.FC = () => {
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.backButton}
-            onPress={() => setSelectedNeedleType(null)}
-          >
+            onPress={() => setSelectedNeedleType(null)}>
             <Text style={styles.backButtonText}>← 선택으로</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
-            {selectedNeedleType === 'crochet' ? '코바늘 뜨개질' : '대바늘 뜨개질'}
+            {selectedNeedleType === 'crochet'
+              ? '코바늘 뜨개질'
+              : '대바늘 뜨개질'}
           </Text>
           <View style={styles.placeholder} />
         </View>
@@ -249,11 +251,12 @@ const FirstKnittingScreen: React.FC = () => {
           <View style={styles.progressTrack}>
             {steps.map((step, index) => (
               <View key={index} style={styles.progressStep}>
-                <View style={[
-                  styles.progressDot,
-                  index === currentStep && styles.currentProgressDot,
-                  index < currentStep && styles.completedProgressDot
-                ]}>
+                <View
+                  style={[
+                    styles.progressDot,
+                    index === currentStep && styles.currentProgressDot,
+                    index < currentStep && styles.completedProgressDot,
+                  ]}>
                   {index < currentStep && (
                     <Text style={styles.completedIcon}>✓</Text>
                   )}
@@ -264,58 +267,64 @@ const FirstKnittingScreen: React.FC = () => {
                     <Text style={styles.pendingStepNumber}>{index + 1}</Text>
                   )}
                 </View>
-                <Text style={[
-                  styles.stepLabel,
-                  index === currentStep && styles.currentStepLabel,
-                  index < currentStep && styles.completedStepLabel
-                ]}>
+                <Text
+                  style={[
+                    styles.stepLabel,
+                    index === currentStep && styles.currentStepLabel,
+                    index < currentStep && styles.completedStepLabel,
+                  ]}>
                   {step.title.split(':')[0]}
                 </Text>
               </View>
             ))}
           </View>
-          
+
           {/* Progress Bar */}
           <View style={styles.progressBarContainer}>
             <View style={styles.progressBarTrack}>
-              <View style={[
-                styles.progressBarFill,
-                { width: `${(currentStep / (steps.length - 1)) * 100}%` }
-              ]} />
+              <View
+                style={[
+                  styles.progressBarFill,
+                  {width: `${(currentStep / (steps.length - 1)) * 100}%`},
+                ]}
+              />
             </View>
           </View>
         </View>
       </SafeAreaView>
 
-      <ScrollView 
+      <ScrollView
         style={styles.content}
-        contentContainerStyle={[styles.scrollContent, {
-          paddingBottom: 120 // 버튼컨테이너 공간 확보
-        }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: 120, // 버튼컨테이너 공간 확보
+          },
+        ]}
         showsVerticalScrollIndicator={false}
         bounces={true}
-        keyboardShouldPersistTaps="handled"
-      >
+        keyboardShouldPersistTaps="handled">
         {/* Step Header */}
         <View style={styles.stepHeader}>
           <Text style={styles.stepEmoji}>{currentStepData.emoji}</Text>
           <Text style={styles.stepTitle}>{currentStepData.title}</Text>
-          <Text style={styles.stepDescription}>{currentStepData.description}</Text>
+          <Text style={styles.stepDescription}>
+            {currentStepData.description}
+          </Text>
         </View>
 
         {/* Visual Learning Section */}
         <View style={styles.visualSection}>
           <Text style={styles.visualSectionTitle}>📷 시각 자료</Text>
-          
+
           {/* Main Tutorial Video Placeholder - 1단계가 아닐 때만 표시 */}
           {currentStep !== 0 && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.videoPlaceholder}
               activeOpacity={0.8}
               accessibilityRole="button"
               accessibilityLabel="동영상 가이드 재생"
-              accessibilityHint="단계별 상세 영상을 시청할 수 있습니다"
-            >
+              accessibilityHint="단계별 상세 영상을 시청할 수 있습니다">
               <View style={styles.placeholderIcon}>
                 <Text style={styles.placeholderIconText}>▶️</Text>
               </View>
@@ -326,29 +335,31 @@ const FirstKnittingScreen: React.FC = () => {
               </View>
             </TouchableOpacity>
           )}
-          
+
           {/* Step Images Grid */}
           <View style={styles.imagesGrid}>
             {currentStep === 0 ? (
               // 1단계: 도구와 재료 이미지
               <>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.imagePlaceholder}
                   activeOpacity={0.7}
                   accessibilityRole="button"
-                  accessibilityLabel={selectedNeedleType === 'crochet' ? '코바늘 이미지 보기' : '대바늘 이미지 보기'}
-                >
+                  accessibilityLabel={
+                    selectedNeedleType === 'crochet'
+                      ? '코바늘 이미지 보기'
+                      : '대바늘 이미지 보기'
+                  }>
                   <Text style={styles.imageIconText}>🖼️</Text>
                   <Text style={styles.imageText}>
                     {selectedNeedleType === 'crochet' ? '코바늘' : '대바늘'}
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.imagePlaceholder}
                   activeOpacity={0.7}
                   accessibilityRole="button"
-                  accessibilityLabel="뜨개실 이미지 보기"
-                >
+                  accessibilityLabel="뜨개실 이미지 보기">
                   <Text style={styles.imageIconText}>🖼️</Text>
                   <Text style={styles.imageText}>뜨개실</Text>
                 </TouchableOpacity>
@@ -356,21 +367,19 @@ const FirstKnittingScreen: React.FC = () => {
             ) : (
               // 2-3단계: 기본 자세와 도구 준비 이미지
               <>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.imagePlaceholder}
                   activeOpacity={0.7}
                   accessibilityRole="button"
-                  accessibilityLabel="기본 자세 이미지 보기"
-                >
+                  accessibilityLabel="기본 자세 이미지 보기">
                   <Text style={styles.imageIconText}>🖼️</Text>
                   <Text style={styles.imageText}>기본 자세</Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.imagePlaceholder}
                   activeOpacity={0.7}
                   accessibilityRole="button"
-                  accessibilityLabel="단계별 과정 이미지 보기"
-                >
+                  accessibilityLabel="단계별 과정 이미지 보기">
                   <Text style={styles.imageIconText}>🖼️</Text>
                   <Text style={styles.imageText}>단계별 과정</Text>
                 </TouchableOpacity>
@@ -383,14 +392,13 @@ const FirstKnittingScreen: React.FC = () => {
         <View style={styles.stepContent}>
           <Text style={styles.contentSectionTitle}>📝 단계별 가이드</Text>
           {currentStepData.content.map((item, index) => (
-            <TouchableOpacity 
-              key={index} 
+            <TouchableOpacity
+              key={index}
               style={styles.contentItem}
               activeOpacity={0.8}
               accessibilityRole="button"
               accessibilityLabel={`단계 ${index + 1}: ${item}`}
-              accessibilityHint="탭하여 자세히 보기"
-            >
+              accessibilityHint="탭하여 자세히 보기">
               <View style={styles.contentRow}>
                 <View style={styles.stepNumber}>
                   <Text style={styles.stepNumberText}>{index + 1}</Text>
@@ -400,16 +408,21 @@ const FirstKnittingScreen: React.FC = () => {
             </TouchableOpacity>
           ))}
         </View>
-        
+
         {/* Quick Tips Section */}
         <View style={styles.quickTipsSection}>
           <Text style={styles.quickTipsTitle}>⚡ 빠른 팁</Text>
           <View style={styles.tipItem}>
             <Text style={styles.tipEmoji}>👍</Text>
             <Text style={styles.tipText}>
-              {selectedNeedleType === 'crochet' && currentStep === 0 && '코바늘은 갈고리 모양 바늘 1개, 대바늘은 직선형 바늘 2개입니다. 이 가이드는 코바늘용이에요!'}
-              {selectedNeedleType === 'knitting' && currentStep === 0 && '대바늘은 직선형 바늘 2개, 코바늘은 갈고리 모양 바늘 1개입니다. 이 가이드는 대바늘용이에요!'}
-              {currentStep === 1 && '코가 너무 조이면 다음 단계가 어려워지니 주의하세요'}
+              {selectedNeedleType === 'crochet' &&
+                currentStep === 0 &&
+                '코바늘은 갈고리 모양 바늘 1개, 대바늘은 직선형 바늘 2개입니다. 이 가이드는 코바늘용이에요!'}
+              {selectedNeedleType === 'knitting' &&
+                currentStep === 0 &&
+                '대바늘은 직선형 바늘 2개, 코바늘은 갈고리 모양 바늘 1개입니다. 이 가이드는 대바늘용이에요!'}
+              {currentStep === 1 &&
+                '코가 너무 조이면 다음 단계가 어려워지니 주의하세요'}
               {currentStep === 2 && '처음에는 속도보다 정확도가 중요해요'}
             </Text>
           </View>
@@ -435,28 +448,29 @@ const FirstKnittingScreen: React.FC = () => {
         </View>
       </ScrollView>
 
-      {/* 하단 배너 광고 */}
-      <AdBanner />
-
       {/* Enhanced Navigation Buttons - 절대 위치 고정 */}
-      <View style={[styles.buttonContainer, {
-        bottom: TAB_BAR_HEIGHT // 탭바 바로 위에 위치 (SafeArea는 탭바가 처리)
-      }]}>
+      <View
+        style={[
+          styles.buttonContainer,
+          {
+            bottom: TAB_BAR_HEIGHT, // 탭바 바로 위에 위치 (SafeArea는 탭바가 처리)
+          },
+        ]}>
         <TouchableOpacity
           style={[
-            styles.button, 
+            styles.button,
             styles.secondaryButton,
-            currentStep === 0 && styles.disabledButton
+            currentStep === 0 && styles.disabledButton,
           ]}
           onPress={handlePrevious}
           disabled={currentStep === 0}
-          activeOpacity={currentStep === 0 ? 1 : 0.7}
-        >
-          <Text style={[
-            styles.buttonText,
-            styles.secondaryButtonText,
-            currentStep === 0 && styles.disabledButtonText
-          ]}>
+          activeOpacity={currentStep === 0 ? 1 : 0.7}>
+          <Text
+            style={[
+              styles.buttonText,
+              styles.secondaryButtonText,
+              currentStep === 0 && styles.disabledButtonText,
+            ]}>
             ← 이전 단계
           </Text>
         </TouchableOpacity>
@@ -464,8 +478,7 @@ const FirstKnittingScreen: React.FC = () => {
         <TouchableOpacity
           style={[styles.button, styles.primaryButton]}
           onPress={isLastStep ? handleFinish : handleNext}
-          activeOpacity={0.8}
-        >
+          activeOpacity={0.8}>
           <Text style={[styles.buttonText, styles.primaryButtonText]}>
             {isLastStep ? '완료하기 🎉' : '다음 단계 →'}
           </Text>
@@ -540,7 +553,7 @@ const styles = StyleSheet.create({
     borderColor: '#FFFFFF',
     elevation: 2,
     shadowColor: '#6B73FF',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
@@ -635,7 +648,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
     borderWidth: 1,
@@ -882,7 +895,7 @@ const styles = StyleSheet.create({
     padding: 24,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.08,
     shadowRadius: 6,
     borderWidth: 2,

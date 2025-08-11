@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   View,
   Image,
@@ -9,13 +9,13 @@ import {
   StatusBar,
 } from 'react-native';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 interface SplashScreenProps {
   onFinish: () => void;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({onFinish}) => {
   // 로고 및 텍스트 애니메이션
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const logoScale = useRef(new Animated.Value(0.8)).current;
@@ -44,17 +44,17 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           useNativeDriver: true,
         }),
       ]),
-      
+
       // 2. 텍스트 등장 (로고 등장 후 약간의 지연)
       Animated.timing(textOpacity, {
         toValue: 1,
         duration: 600,
         useNativeDriver: true,
       }),
-      
+
       // 3. 잠시 대기
       Animated.delay(800),
-      
+
       // 4. 함께 페이드아웃
       Animated.parallel([
         Animated.timing(logoOpacity, {
@@ -94,27 +94,18 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
               styles.logoContainer,
               {
                 opacity: logoOpacity,
-                transform: [
-                  { scale: logoScale },
-                  { rotate: rotateInterpolation }
-                ],
+                transform: [{scale: logoScale}, {rotate: rotateInterpolation}],
               },
-            ]}
-          >
+            ]}>
             <Image
               source={require('../assets/images/logo.png')}
               style={styles.logoImage}
               resizeMode="contain"
             />
           </Animated.View>
-          
+
           {/* StitchCraft 브랜드 텍스트 */}
-          <Animated.View
-            style={[
-              styles.textContainer,
-              { opacity: textOpacity }
-            ]}
-          >
+          <Animated.View style={[styles.textContainer, {opacity: textOpacity}]}>
             <Text style={styles.brandText}>StitchCraft</Text>
           </Animated.View>
         </View>

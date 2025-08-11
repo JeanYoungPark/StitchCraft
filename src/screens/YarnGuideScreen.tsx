@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,28 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const YarnGuideScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState<'material' | 'weight' | 'texture'>('material');
+  const [selectedCategory, setSelectedCategory] = useState<
+    'material' | 'weight' | 'texture'
+  >('material');
 
   const yarnMaterials = [
     {
       name: '면실 (Cotton)',
       description: '시원하고 통기성이 좋아 여름용 의류에 적합',
-      features: ['세탁이 쉬움', '내구성이 좋음', '통기성 우수', '알레르기 반응 적음'],
+      features: [
+        '세탁이 쉬움',
+        '내구성이 좋음',
+        '통기성 우수',
+        '알레르기 반응 적음',
+      ],
       uses: '여름 티셔츠, 행주, 수세미, 가방',
       care: '찬물 또는 미지근한 물로 세탁, 건조기 사용 가능',
       pros: '관리 쉬움, 실용적',
-      cons: '탄력성 부족, 보온성 낮음'
+      cons: '탄력성 부족, 보온성 낮음',
     },
     {
       name: '모직실 (Wool)',
@@ -30,7 +37,7 @@ const YarnGuideScreen: React.FC = () => {
       uses: '스웨터, 목도리, 장갑, 모자',
       care: '찬물 손세탁, 드라이클리닝 권장',
       pros: '보온성, 자연스러운 느낌',
-      cons: '관리 까다로움, 가격 비쌈'
+      cons: '관리 까다로움, 가격 비쌈',
     },
     {
       name: '아크릴실 (Acrylic)',
@@ -39,7 +46,7 @@ const YarnGuideScreen: React.FC = () => {
       uses: '연습용, 아동복, 장식품, 인형',
       care: '세탁기 사용 가능, 빠른 건조',
       pros: '경제적, 초보자 친화적',
-      cons: '통기성 부족, 정전기 발생'
+      cons: '통기성 부족, 정전기 발생',
     },
     {
       name: '알파카 실 (Alpaca)',
@@ -48,8 +55,8 @@ const YarnGuideScreen: React.FC = () => {
       uses: '고급 스웨터, 목도리, 코트',
       care: '드라이클리닝 또는 찬물 손세탁',
       pros: '고급스러운 질감, 보온성',
-      cons: '가격 비쌈, 관리 까다로움'
-    }
+      cons: '가격 비쌈, 관리 까다로움',
+    },
   ];
 
   const yarnWeights = [
@@ -58,29 +65,29 @@ const YarnGuideScreen: React.FC = () => {
       thickness: '매우 얇음',
       needle: '2-3.5mm',
       uses: '레이스, 숄, 얇은 스카프',
-      level: '고급자용'
+      level: '고급자용',
     },
     {
       name: 'DK 웨이트 (Double Knitting)',
       thickness: '중간 굵기',
       needle: '4-5mm',
       uses: '아동복, 가벼운 스웨터',
-      level: '초보자 추천'
+      level: '초보자 추천',
     },
     {
       name: '벌키 웨이트 (Chunky)',
       thickness: '두꺼움',
       needle: '6-8mm',
       uses: '목도리, 담요, 겨울 스웨터',
-      level: '초보자 추천'
+      level: '초보자 추천',
     },
     {
       name: '슈퍼 벌키 (Super Chunky)',
       thickness: '매우 두꺼움',
       needle: '9-15mm',
       uses: '러그, 두꺼운 담요',
-      level: '중급자용'
-    }
+      level: '중급자용',
+    },
   ];
 
   const yarnTextures = [
@@ -88,36 +95,35 @@ const YarnGuideScreen: React.FC = () => {
       name: '부클 얀 (Bouclé)',
       description: '곱슬곱슬한 질감의 실',
       effect: '입체적이고 푹신한 질감',
-      uses: '스웨터, 카디건'
+      uses: '스웨터, 카디건',
     },
     {
       name: '메탈릭 얀 (Metallic)',
       description: '반짝이는 금속 재질이 포함된 실',
       effect: '화려하고 반짝이는 효과',
-      uses: '파티용 의류, 액세서리'
+      uses: '파티용 의류, 액세서리',
     },
     {
       name: '퍼지 얀 (Fuzzy)',
       description: '털이 많이 일어나는 부드러운 실',
       effect: '따뜻하고 부드러운 질감',
-      uses: '겨울 스웨터, 인형'
+      uses: '겨울 스웨터, 인형',
     },
     {
       name: '리본 얀 (Ribbon)',
       description: '납작한 리본 형태의 실',
       effect: '독특한 텍스처와 광택',
-      uses: '가방, 모자, 장식품'
-    }
+      uses: '가방, 모자, 장식품',
+    },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>← 돌아가기</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>실 종류 가이드</Text>
@@ -126,27 +132,45 @@ const YarnGuideScreen: React.FC = () => {
 
       {/* Category Tabs */}
       <View style={styles.tabContainer}>
-        <TouchableOpacity 
-          style={[styles.tab, selectedCategory === 'material' && styles.activeTab]}
-          onPress={() => setSelectedCategory('material')}
-        >
-          <Text style={[styles.tabText, selectedCategory === 'material' && styles.activeTabText]}>
+        <TouchableOpacity
+          style={[
+            styles.tab,
+            selectedCategory === 'material' && styles.activeTab,
+          ]}
+          onPress={() => setSelectedCategory('material')}>
+          <Text
+            style={[
+              styles.tabText,
+              selectedCategory === 'material' && styles.activeTabText,
+            ]}>
             재질별
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.tab, selectedCategory === 'weight' && styles.activeTab]}
-          onPress={() => setSelectedCategory('weight')}
-        >
-          <Text style={[styles.tabText, selectedCategory === 'weight' && styles.activeTabText]}>
+        <TouchableOpacity
+          style={[
+            styles.tab,
+            selectedCategory === 'weight' && styles.activeTab,
+          ]}
+          onPress={() => setSelectedCategory('weight')}>
+          <Text
+            style={[
+              styles.tabText,
+              selectedCategory === 'weight' && styles.activeTabText,
+            ]}>
             굵기별
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.tab, selectedCategory === 'texture' && styles.activeTab]}
-          onPress={() => setSelectedCategory('texture')}
-        >
-          <Text style={[styles.tabText, selectedCategory === 'texture' && styles.activeTabText]}>
+        <TouchableOpacity
+          style={[
+            styles.tab,
+            selectedCategory === 'texture' && styles.activeTab,
+          ]}
+          onPress={() => setSelectedCategory('texture')}>
+          <Text
+            style={[
+              styles.tabText,
+              selectedCategory === 'texture' && styles.activeTabText,
+            ]}>
             질감별
           </Text>
         </TouchableOpacity>
@@ -159,16 +183,18 @@ const YarnGuideScreen: React.FC = () => {
             <Text style={styles.sectionSubtitle}>
               각 재질의 특성을 이해하고 용도에 맞는 실을 선택해보세요
             </Text>
-            
+
             {yarnMaterials.map((yarn, index) => (
               <View key={index} style={styles.yarnCard}>
                 <Text style={styles.yarnName}>{yarn.name}</Text>
                 <Text style={styles.yarnDescription}>{yarn.description}</Text>
-                
+
                 <View style={styles.detailSection}>
                   <Text style={styles.detailTitle}>주요 특징</Text>
                   {yarn.features.map((feature, idx) => (
-                    <Text key={idx} style={styles.featureText}>• {feature}</Text>
+                    <Text key={idx} style={styles.featureText}>
+                      • {feature}
+                    </Text>
                   ))}
                 </View>
 
@@ -207,16 +233,18 @@ const YarnGuideScreen: React.FC = () => {
             <Text style={styles.sectionSubtitle}>
               실의 굵기에 따른 바늘 호수와 적합한 작품을 알아보세요
             </Text>
-            
+
             {yarnWeights.map((weight, index) => (
               <View key={index} style={styles.weightCard}>
                 <View style={styles.weightHeader}>
                   <Text style={styles.weightName}>{weight.name}</Text>
                   <Text style={styles.weightLevel}>{weight.level}</Text>
                 </View>
-                
-                <Text style={styles.weightThickness}>굵기: {weight.thickness}</Text>
-                
+
+                <Text style={styles.weightThickness}>
+                  굵기: {weight.thickness}
+                </Text>
+
                 <View style={styles.weightDetails}>
                   <View style={styles.weightDetailItem}>
                     <Text style={styles.weightLabel}>권장 바늘</Text>
@@ -238,12 +266,14 @@ const YarnGuideScreen: React.FC = () => {
             <Text style={styles.sectionSubtitle}>
               특별한 질감의 실로 독특한 효과를 연출해보세요
             </Text>
-            
+
             {yarnTextures.map((texture, index) => (
               <View key={index} style={styles.textureCard}>
                 <Text style={styles.textureName}>{texture.name}</Text>
-                <Text style={styles.textureDescription}>{texture.description}</Text>
-                
+                <Text style={styles.textureDescription}>
+                  {texture.description}
+                </Text>
+
                 <View style={styles.textureDetails}>
                   <View style={styles.textureDetailItem}>
                     <Text style={styles.textureLabel}>효과</Text>
@@ -263,10 +293,18 @@ const YarnGuideScreen: React.FC = () => {
         <View style={styles.tipsSection}>
           <Text style={styles.tipsTitle}>💡 실 선택 팁</Text>
           <View style={styles.tipsList}>
-            <Text style={styles.tipText}>• 처음에는 중간 굵기의 면실이나 아크릴실을 추천해요</Text>
-            <Text style={styles.tipText}>• 실 라벨에 적힌 권장 바늘 호수를 확인하세요</Text>
-            <Text style={styles.tipText}>• 같은 브랜드, 같은 염료 번호로 구매하는 것이 좋아요</Text>
-            <Text style={styles.tipText}>• 작품을 시작하기 전에 게이지 뜨기를 해보세요</Text>
+            <Text style={styles.tipText}>
+              • 처음에는 중간 굵기의 면실이나 아크릴실을 추천해요
+            </Text>
+            <Text style={styles.tipText}>
+              • 실 라벨에 적힌 권장 바늘 호수를 확인하세요
+            </Text>
+            <Text style={styles.tipText}>
+              • 같은 브랜드, 같은 염료 번호로 구매하는 것이 좋아요
+            </Text>
+            <Text style={styles.tipText}>
+              • 작품을 시작하기 전에 게이지 뜨기를 해보세요
+            </Text>
           </View>
         </View>
       </ScrollView>
@@ -356,7 +394,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.08,
     shadowRadius: 4,
   },
@@ -450,7 +488,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },
@@ -503,7 +541,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },

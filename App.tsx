@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, {useState, useEffect} from 'react';
+import {StatusBar} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import mobileAds from 'react-native-google-mobile-ads';
 
-import { AppNavigator } from './src/navigation/AppNavigator';
+import {AppNavigator} from './src/navigation/AppNavigator';
 import SplashScreen from './src/screens/SplashScreen';
 
 export default function App() {

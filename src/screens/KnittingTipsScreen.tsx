@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,26 +7,27 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { knittingTipsData, KnittingTip } from '../data/KnittingTipsData';
+import {useNavigation} from '@react-navigation/native';
+import {knittingTipsData, KnittingTip} from '../data/KnittingTipsData';
 import AdBanner from '../components/AdBanner';
 
 const KnittingTipsScreen: React.FC = () => {
   const navigation = useNavigation();
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'beginner' | 'technique' | 'problem' | 'material'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<
+    'all' | 'beginner' | 'technique' | 'problem' | 'material'
+  >('all');
   const [expandedTips, setExpandedTips] = useState<Set<string>>(new Set());
 
-
   const categories = [
-    { key: 'all' as const, label: '전체' },
-    { key: 'beginner' as const, label: '초보자' },
-    { key: 'technique' as const, label: '기법' },
-    { key: 'problem' as const, label: '문제해결' },
-    { key: 'material' as const, label: '재료/도구' },
+    {key: 'all' as const, label: '전체'},
+    {key: 'beginner' as const, label: '초보자'},
+    {key: 'technique' as const, label: '기법'},
+    {key: 'problem' as const, label: '문제해결'},
+    {key: 'material' as const, label: '재료/도구'},
   ];
 
-  const filteredTips = knittingTipsData.filter(tip => 
-    selectedCategory === 'all' || tip.category === selectedCategory
+  const filteredTips = knittingTipsData.filter(
+    tip => selectedCategory === 'all' || tip.category === selectedCategory,
   );
 
   const toggleExpanded = (tipId: string) => {
@@ -41,10 +42,14 @@ const KnittingTipsScreen: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return { bg: '#F0FDF4', text: '#15803D', label: '쉬움' };
-      case 'medium': return { bg: '#FFFBF0', text: '#D97706', label: '보통' };
-      case 'hard': return { bg: '#FEF2F2', text: '#DC2626', label: '어려움' };
-      default: return { bg: '#F0FDF4', text: '#15803D', label: '쉬움' };
+      case 'easy':
+        return {bg: '#F0FDF4', text: '#15803D', label: '쉬움'};
+      case 'medium':
+        return {bg: '#FFFBF0', text: '#D97706', label: '보통'};
+      case 'hard':
+        return {bg: '#FEF2F2', text: '#DC2626', label: '어려움'};
+      default:
+        return {bg: '#F0FDF4', text: '#15803D', label: '쉬움'};
     }
   };
 
@@ -57,26 +62,28 @@ const KnittingTipsScreen: React.FC = () => {
         key={tip.id}
         style={styles.tipCard}
         onPress={() => toggleExpanded(tip.id)}
-        activeOpacity={0.7}
-      >
+        activeOpacity={0.7}>
         <View style={styles.tipHeader}>
           <View style={styles.tipTitleRow}>
             <Text style={styles.tipTitle}>{tip.title}</Text>
-            <View style={[styles.difficultyBadge, { backgroundColor: difficultyInfo.bg }]}>
-              <Text style={[styles.difficultyText, { color: difficultyInfo.text }]}>
+            <View
+              style={[
+                styles.difficultyBadge,
+                {backgroundColor: difficultyInfo.bg},
+              ]}>
+              <Text
+                style={[styles.difficultyText, {color: difficultyInfo.text}]}>
                 {difficultyInfo.label}
               </Text>
             </View>
           </View>
         </View>
 
-        <Text 
-          style={styles.tipContent} 
-          numberOfLines={isExpanded ? undefined : 2}
-        >
+        <Text
+          style={styles.tipContent}
+          numberOfLines={isExpanded ? undefined : 2}>
           {tip.content}
         </Text>
-
 
         <View style={styles.expandIndicator}>
           <Text style={styles.expandIcon}>{isExpanded ? '−' : '+'}</Text>
@@ -89,10 +96,9 @@ const KnittingTipsScreen: React.FC = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>← 돌아가기</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>뜨개질 팁 모음</Text>
@@ -101,24 +107,24 @@ const KnittingTipsScreen: React.FC = () => {
 
       {/* Category Tabs */}
       <View style={styles.categoryScrollView}>
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoryContainer}
-        >
-          {categories.map((category) => (
+          contentContainerStyle={styles.categoryContainer}>
+          {categories.map(category => (
             <TouchableOpacity
               key={category.key}
               style={[
                 styles.categoryTab,
-                selectedCategory === category.key && styles.activeCategoryTab
+                selectedCategory === category.key && styles.activeCategoryTab,
               ]}
-              onPress={() => setSelectedCategory(category.key)}
-            >
-              <Text style={[
-                styles.categoryText,
-                selectedCategory === category.key && styles.activeCategoryText
-              ]}>
+              onPress={() => setSelectedCategory(category.key)}>
+              <Text
+                style={[
+                  styles.categoryText,
+                  selectedCategory === category.key &&
+                    styles.activeCategoryText,
+                ]}>
                 {category.label}
               </Text>
             </TouchableOpacity>
@@ -147,14 +153,22 @@ const KnittingTipsScreen: React.FC = () => {
         <View style={styles.bottomNote}>
           <Text style={styles.noteTitle}>💡 팁 활용법</Text>
           <View style={styles.noteList}>
-            <Text style={styles.noteText}>• 각 팁을 터치하면 자세한 내용을 볼 수 있어요</Text>
-            <Text style={styles.noteText}>• 카테고리별로 필요한 팁을 찾아보세요</Text>
-            <Text style={styles.noteText}>• 실제 뜨개질할 때 참고하여 활용해주세요</Text>
-            <Text style={styles.noteText}>• 어려움 정도를 확인하고 단계적으로 학습하세요</Text>
+            <Text style={styles.noteText}>
+              • 각 팁을 터치하면 자세한 내용을 볼 수 있어요
+            </Text>
+            <Text style={styles.noteText}>
+              • 카테고리별로 필요한 팁을 찾아보세요
+            </Text>
+            <Text style={styles.noteText}>
+              • 실제 뜨개질할 때 참고하여 활용해주세요
+            </Text>
+            <Text style={styles.noteText}>
+              • 어려움 정도를 확인하고 단계적으로 학습하세요
+            </Text>
           </View>
         </View>
       </ScrollView>
-      
+
       {/* 하단 배너 광고 */}
       <AdBanner />
     </SafeAreaView>
@@ -248,7 +262,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
     position: 'relative',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -9,15 +9,21 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { databaseManager, Pattern } from '../database/DatabaseManager';
+import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
+import {databaseManager, Pattern} from '../database/DatabaseManager';
 
 // Navigation types
-import { PatternsStackParamList } from '../navigation/AppNavigator';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {PatternsStackParamList} from '../navigation/AppNavigator';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-type PatternsScreenRouteProp = RouteProp<PatternsStackParamList, 'PatternsList'>;
-type PatternsScreenNavigationProp = StackNavigationProp<PatternsStackParamList, 'PatternsList'>;
+type PatternsScreenRouteProp = RouteProp<
+  PatternsStackParamList,
+  'PatternsList'
+>;
+type PatternsScreenNavigationProp = StackNavigationProp<
+  PatternsStackParamList,
+  'PatternsList'
+>;
 
 const PatternsScreen: React.FC = () => {
   const route = useRoute<PatternsScreenRouteProp>();
@@ -26,18 +32,20 @@ const PatternsScreen: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('전체');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showCategoryMenu, setShowCategoryMenu] = useState<boolean>(false);
-  const [bookmarkedPatterns, setBookmarkedPatterns] = useState<Set<string>>(new Set());
+  const [bookmarkedPatterns, setBookmarkedPatterns] = useState<Set<string>>(
+    new Set(),
+  );
   const [patterns, setPatterns] = useState<Pattern[]>([]);
   const [loading, setLoading] = useState(true);
 
   // 스크롤을 맨 위로 이동하는 함수
   const scrollToTop = useCallback(() => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    scrollViewRef.current?.scrollTo({y: 0, animated: true});
   }, []);
 
   // 탭 이벤트 리스너 등록 - Patterns 탭 클릭 시 항상 스크롤을 맨 위로
   useEffect(() => {
-    const unsubscribe = navigation.getParent()?.addListener('tabPress', (e) => {
+    const unsubscribe = navigation.getParent()?.addListener('tabPress', e => {
       // Patterns 탭이 클릭되면 항상 스크롤을 맨 위로 이동
       if (e.target?.includes('Patterns')) {
         // 약간의 지연을 두어 네비게이션이 완료된 후 스크롤
@@ -55,24 +63,39 @@ const PatternsScreen: React.FC = () => {
       setActiveFilter(route.params.initialFilter);
     }
     loadData();
+
+    // 디버깅용 - 데이터베이스 상태 확인
+    setTimeout(async () => {
+      try {
+        await databaseManager.debugDatabaseState();
+      } catch (error) {
+        console.error('디버깅 실패:', error);
+      }
+    }, 2000);
   }, [route.params?.initialFilter]);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      
+
       // 패턴과 북마크 데이터를 병렬로 로드
       const [patternsData, bookmarks] = await Promise.all([
         databaseManager.getPatterns(),
-        databaseManager.getBookmarks()
+        databaseManager.getBookmarks(),
       ]);
+
+      console.log('📊 로드된 패턴 개수:', patternsData.length);
+      console.log(
+        '📝 로드된 패턴 리스트:',
+        patternsData.map(p => `${p.patternId}: ${p.title}`),
+      );
 
       setPatterns(patternsData);
 
       const patternBookmarks = new Set(
         bookmarks
           .filter(bookmark => bookmark.itemType === 'pattern')
-          .map(bookmark => bookmark.itemId)
+          .map(bookmark => bookmark.itemId),
       );
       setBookmarkedPatterns(patternBookmarks);
     } catch (error) {
@@ -83,10 +106,14 @@ const PatternsScreen: React.FC = () => {
     }
   };
 
-  const toggleBookmark = async (patternId: string, title: string, description: string) => {
+  const toggleBookmark = async (
+    patternId: string,
+    title: string,
+    description: string,
+  ) => {
     try {
       const isBookmarked = bookmarkedPatterns.has(patternId);
-      
+
       if (isBookmarked) {
         await databaseManager.removeBookmark('pattern', patternId);
         setBookmarkedPatterns(prev => {
@@ -124,7 +151,7 @@ const PatternsScreen: React.FC = () => {
       description: pattern.description,
       materials: JSON.parse(pattern.materials),
       steps: JSON.parse(pattern.steps),
-      videoUrl: pattern.videoUrl,
+      youtubeCredit: pattern.youtubeCredit,
       hasImages: pattern.hasImages,
       hasPattern: pattern.hasPattern,
     });
@@ -134,7 +161,10 @@ const PatternsScreen: React.FC = () => {
     if (activeFilter !== '전체' && pattern.difficulty !== activeFilter) {
       return false;
     }
-    if (searchQuery && !pattern.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+    if (
+      searchQuery &&
+      !pattern.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
       return false;
     }
     return true;
@@ -145,24 +175,25 @@ const PatternsScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerTop}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.hamburgerButton}
-              onPress={() => setShowCategoryMenu(true)}
-            >
+              onPress={() => setShowCategoryMenu(true)}>
               <View style={styles.hamburgerLine} />
               <View style={styles.hamburgerLine} />
               <View style={styles.hamburgerLine} />
             </TouchableOpacity>
-            <View style={styles.headerText}>
-              <Text style={styles.title}>패턴 라이브러리</Text>
-              <Text style={styles.subtitle}>
-                다양한 뜨개질 패턴을 찾아보세요
-              </Text>
-              <Text style={styles.updateInfo}>
-                새 패턴이 주기적으로 추가됩니다
-              </Text>
+            <View style={styles.headerTextContainer}>
+              <View style={styles.headerText}>
+                <Text style={styles.title}>패턴 라이브러리</Text>
+                <Text style={styles.subtitle}>
+                  다양한 뜨개질 패턴을 찾아보세요
+                </Text>
+                <Text style={styles.updateInfo}>
+                  새 패턴이 주기적으로 추가됩니다
+                </Text>
+              </View>
             </View>
-            <View style={styles.headerPlaceholder} />
+            <View style={styles.placeholder} />
           </View>
         </View>
 
@@ -184,19 +215,19 @@ const PatternsScreen: React.FC = () => {
         <View style={styles.filterSection}>
           <Text style={styles.filterTitle}>난이도</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {difficultyFilters.map((filter) => (
-              <TouchableOpacity 
+            {difficultyFilters.map(filter => (
+              <TouchableOpacity
                 key={filter}
                 style={[
-                  styles.filterTag, 
-                  activeFilter === filter && styles.activeFilter
+                  styles.filterTag,
+                  activeFilter === filter && styles.activeFilter,
                 ]}
-                onPress={() => handleFilterPress(filter)}
-              >
-                <Text style={[
-                  styles.filterText, 
-                  activeFilter === filter && styles.activeFilterText
-                ]}>
+                onPress={() => handleFilterPress(filter)}>
+                <Text
+                  style={[
+                    styles.filterText,
+                    activeFilter === filter && styles.activeFilterText,
+                  ]}>
                   {filter}
                 </Text>
               </TouchableOpacity>
@@ -209,7 +240,7 @@ const PatternsScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>
             {activeFilter === '전체' ? '모든 패턴' : `${activeFilter} 패턴`}
           </Text>
-          
+
           {loading ? (
             <View style={styles.loadingContainer}>
               <Text style={styles.loadingText}>패턴을 불러오는 중...</Text>
@@ -219,36 +250,47 @@ const PatternsScreen: React.FC = () => {
               <Text style={styles.emptyText}>패턴이 없습니다</Text>
             </View>
           ) : (
-            filteredPatterns.map((pattern) => {
+            filteredPatterns.map(pattern => {
               const getDifficultyStyle = () => {
                 switch (pattern.difficulty) {
-                  case '중급': return styles.intermediateBadge;
-                  case '고급': return styles.advancedBadge;
-                  default: return {};
+                  case '중급':
+                    return styles.intermediateBadge;
+                  case '고급':
+                    return styles.advancedBadge;
+                  default:
+                    return {};
                 }
               };
 
               return (
-                <TouchableOpacity 
+                <TouchableOpacity
                   key={pattern.patternId}
                   style={styles.patternCard}
-                  onPress={() => handlePatternPress(pattern)}
-                >
+                  onPress={() => handlePatternPress(pattern)}>
                   <View style={styles.cardHeader}>
-                    <View style={styles.cardBadges}>
-                      <Text style={[styles.difficultyBadge, getDifficultyStyle()]}>
+                    <View style={styles.cardMainBadges}>
+                      <Text
+                        style={[styles.difficultyBadge, getDifficultyStyle()]}>
                         {pattern.difficulty}
                       </Text>
                       <Text style={styles.timeBadge}>{pattern.duration}</Text>
                     </View>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       style={styles.bookmarkButton}
-                      onPress={(e) => {
+                      onPress={e => {
                         e.stopPropagation();
-                        toggleBookmark(pattern.patternId, pattern.title, pattern.description);
-                      }}
-                    >
-                      <Text style={[styles.bookmarkIcon, bookmarkedPatterns.has(pattern.patternId) && styles.bookmarkedIcon]}>
+                        toggleBookmark(
+                          pattern.patternId,
+                          pattern.title,
+                          pattern.description,
+                        );
+                      }}>
+                      <Text
+                        style={[
+                          styles.bookmarkIcon,
+                          bookmarkedPatterns.has(pattern.patternId) &&
+                            styles.bookmarkedIcon,
+                        ]}>
                         ♥
                       </Text>
                     </TouchableOpacity>
@@ -259,6 +301,21 @@ const PatternsScreen: React.FC = () => {
                       <Text style={styles.cardSubtitle}>
                         {pattern.description}
                       </Text>
+                      {(pattern.youtubeCredit?.duration ||
+                        pattern.youtubeCredit?.uploadDate) && (
+                        <View style={styles.videoInfoRow}>
+                          {pattern.youtubeCredit?.duration && (
+                            <Text style={styles.videoInfoBadge}>
+                              영상 {pattern.youtubeCredit.duration}
+                            </Text>
+                          )}
+                          {pattern.youtubeCredit?.uploadDate && (
+                            <Text style={styles.videoInfoBadge}>
+                              {pattern.youtubeCredit.uploadDate}
+                            </Text>
+                          )}
+                        </View>
+                      )}
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -266,14 +323,12 @@ const PatternsScreen: React.FC = () => {
             })
           )}
         </View>
-
-
       </ScrollView>
 
       {/* Category Menu Modal */}
       {showCategoryMenu && (
         <View style={styles.modalOverlay}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.modalBackground}
             onPress={() => setShowCategoryMenu(false)}
             activeOpacity={1}
@@ -281,19 +336,17 @@ const PatternsScreen: React.FC = () => {
           <View style={styles.categoryModal}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>카테고리</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.closeButton}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <Text style={styles.closeButtonText}>×</Text>
               </TouchableOpacity>
             </View>
-            
+
             <ScrollView style={styles.categoryScrollView}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.categoryMenuItem}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <View style={styles.categoryMenuContent}>
                   <Text style={styles.categoryEmoji}>🧣</Text>
                   <View style={styles.categoryMenuText}>
@@ -303,11 +356,10 @@ const PatternsScreen: React.FC = () => {
                 </View>
                 <Text style={styles.categoryArrow}>›</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={styles.categoryMenuItem}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <View style={styles.categoryMenuContent}>
                   <Text style={styles.categoryEmoji}>🧢</Text>
                   <View style={styles.categoryMenuText}>
@@ -317,11 +369,10 @@ const PatternsScreen: React.FC = () => {
                 </View>
                 <Text style={styles.categoryArrow}>›</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={styles.categoryMenuItem}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <View style={styles.categoryMenuContent}>
                   <Text style={styles.categoryEmoji}>🧤</Text>
                   <View style={styles.categoryMenuText}>
@@ -331,11 +382,10 @@ const PatternsScreen: React.FC = () => {
                 </View>
                 <Text style={styles.categoryArrow}>›</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={styles.categoryMenuItem}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <View style={styles.categoryMenuContent}>
                   <Text style={styles.categoryEmoji}>👜</Text>
                   <View style={styles.categoryMenuText}>
@@ -346,10 +396,9 @@ const PatternsScreen: React.FC = () => {
                 <Text style={styles.categoryArrow}>›</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.categoryMenuItem}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <View style={styles.categoryMenuContent}>
                   <Text style={styles.categoryEmoji}>🧦</Text>
                   <View style={styles.categoryMenuText}>
@@ -360,10 +409,9 @@ const PatternsScreen: React.FC = () => {
                 <Text style={styles.categoryArrow}>›</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.categoryMenuItem}
-                onPress={() => setShowCategoryMenu(false)}
-              >
+                onPress={() => setShowCategoryMenu(false)}>
                 <View style={styles.categoryMenuContent}>
                   <Text style={styles.categoryEmoji}>🏠</Text>
                   <View style={styles.categoryMenuText}>
@@ -391,7 +439,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    marginBottom: 25,
+    marginBottom: 45,
   },
   headerTop: {
     flexDirection: 'row',
@@ -412,12 +460,35 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     borderRadius: 1,
   },
-  headerText: {
-    flex: 1,
+  headerTextContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
     alignItems: 'center',
+    pointerEvents: 'none',
   },
-  headerPlaceholder: {
+  headerText: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  placeholder: {
     width: 40,
+  },
+  debugButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#6B73FF',
+    borderRadius: 20,
+    marginTop: 4,
+  },
+  debugButtonText: {
+    fontSize: 20,
+    color: '#FFFFFF',
   },
   title: {
     fontSize: 28,
@@ -441,7 +512,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   searchSection: {
-    marginBottom: 20,
+    marginBottom: 25,
   },
   searchBar: {
     flexDirection: 'row',
@@ -452,7 +523,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },
@@ -467,7 +538,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   filterSection: {
-    marginBottom: 25,
+    marginBottom: 35,
   },
   filterTitle: {
     fontSize: 16,
@@ -484,7 +555,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 1,
   },
@@ -517,7 +588,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },
@@ -527,7 +598,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  cardBadges: {
+  cardMainBadges: {
     flexDirection: 'row',
   },
   bookmarkButton: {
@@ -563,6 +634,32 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 6,
     fontWeight: 'bold',
+    lineHeight: 16,
+  },
+  videoBadge: {
+    fontSize: 12,
+    color: '#DC2626',
+    backgroundColor: '#FEF2F2',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    fontWeight: 'bold',
+    marginLeft: 8,
+    lineHeight: 16,
+  },
+  videoInfoRow: {
+    flexDirection: 'row',
+    marginTop: 8,
+    gap: 8,
+  },
+  videoInfoBadge: {
+    fontSize: 11,
+    color: '#6B7280',
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    fontWeight: '500',
     lineHeight: 16,
   },
   cardContent: {
@@ -639,7 +736,7 @@ const styles = StyleSheet.create({
     maxHeight: '70%',
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.25,
     shadowRadius: 10,
   },

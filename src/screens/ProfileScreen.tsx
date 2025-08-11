@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,13 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { databaseManager, UserProfile } from '../database/DatabaseManager';
+import {databaseManager, UserProfile} from '../database/DatabaseManager';
 
 const ProfileScreen: React.FC = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [databaseVersion, setDatabaseVersion] = useState<string>('');
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -21,93 +23,99 @@ const ProfileScreen: React.FC = () => {
   const loadProfile = async () => {
     try {
       setLoading(true);
-      const userProfile = await databaseManager.getUserProfile();
+      const [userProfile, dbVersion] = await Promise.all([
+        databaseManager.getUserProfile(),
+        databaseManager.getSetting('pattern_data_version'),
+      ]);
       setProfile(userProfile);
+      setDatabaseVersion(dbVersion || '없음');
     } catch (error) {
       console.error('프로필 로드 실패:', error);
       Alert.alert('오류', '프로필을 불러오는데 실패했습니다.');
+      setDatabaseVersion('오류');
     } finally {
       setLoading(false);
     }
   };
 
   const handleNameChange = () => {
-    Alert.alert(
-      "이름 변경",
-      "새로운 이름을 선택해주세요",
-      [
-        { text: "취소", style: "cancel" },
-        { text: "뜨개질 초보자", onPress: () => updateProfile({ name: '뜨개질 초보자' }) },
-        { text: "뜨개질 애호가", onPress: () => updateProfile({ name: '뜨개질 애호가' }) },
-        { text: "뜨개질 마스터", onPress: () => updateProfile({ name: '뜨개질 마스터' }) }
-      ]
-    );
+    Alert.alert('이름 변경', '새로운 이름을 선택해주세요', [
+      {text: '취소', style: 'cancel'},
+      {
+        text: '뜨개질 초보자',
+        onPress: () => updateProfile({name: '뜨개질 초보자'}),
+      },
+      {
+        text: '뜨개질 애호가',
+        onPress: () => updateProfile({name: '뜨개질 애호가'}),
+      },
+      {
+        text: '뜨개질 마스터',
+        onPress: () => updateProfile({name: '뜨개질 마스터'}),
+      },
+    ]);
   };
 
   const handleLevelChange = () => {
-    Alert.alert(
-      "레벨 변경",
-      "현재 레벨을 선택해주세요",
-      [
-        { text: "취소", style: "cancel" },
-        { text: "Level 1 - 뜨개질 입문자", onPress: () => updateProfile({ level: 'Level 1 - 뜨개질 입문자' }) },
-        { text: "Level 2 - 열정적인 뜨개꾼", onPress: () => updateProfile({ level: 'Level 2 - 열정적인 뜨개꾼' }) },
-        { text: "Level 3 - 숙련된 뜨개꾼", onPress: () => updateProfile({ level: 'Level 3 - 숙련된 뜨개꾼' }) },
-        { text: "Level 4 - 뜨개질 전문가", onPress: () => updateProfile({ level: 'Level 4 - 뜨개질 전문가' }) }
-      ]
-    );
+    Alert.alert('레벨 변경', '현재 레벨을 선택해주세요', [
+      {text: '취소', style: 'cancel'},
+      {
+        text: 'Level 1 - 뜨개질 입문자',
+        onPress: () => updateProfile({level: 'Level 1 - 뜨개질 입문자'}),
+      },
+      {
+        text: 'Level 2 - 열정적인 뜨개꾼',
+        onPress: () => updateProfile({level: 'Level 2 - 열정적인 뜨개꾼'}),
+      },
+      {
+        text: 'Level 3 - 숙련된 뜨개꾼',
+        onPress: () => updateProfile({level: 'Level 3 - 숙련된 뜨개꾼'}),
+      },
+      {
+        text: 'Level 4 - 뜨개질 전문가',
+        onPress: () => updateProfile({level: 'Level 4 - 뜨개질 전문가'}),
+      },
+    ]);
   };
 
   const handleAvatarChange = () => {
-    Alert.alert(
-      "아바타 변경",
-      "새로운 아바타를 선택해주세요",
-      [
-        { text: "취소", style: "cancel" },
-        { text: "🧶", onPress: () => updateProfile({ avatar: '🧶' }) },
-        { text: "🧵", onPress: () => updateProfile({ avatar: '🧵' }) },
-        { text: "✂️", onPress: () => updateProfile({ avatar: '✂️' }) },
-        { text: "🪡", onPress: () => updateProfile({ avatar: '🪡' }) }
-      ]
-    );
+    Alert.alert('아바타 변경', '새로운 아바타를 선택해주세요', [
+      {text: '취소', style: 'cancel'},
+      {text: '🧶', onPress: () => updateProfile({avatar: '🧶'})},
+      {text: '🧵', onPress: () => updateProfile({avatar: '🧵'})},
+      {text: '✂️', onPress: () => updateProfile({avatar: '✂️'})},
+      {text: '🪡', onPress: () => updateProfile({avatar: '🪡'})},
+    ]);
   };
 
   const handleMeasurementUnitChange = () => {
-    Alert.alert(
-      "측정 단위 변경",
-      "측정 단위를 선택해주세요",
-      [
-        { text: "취소", style: "cancel" },
-        { 
-          text: "미터법 (cm, mm)", 
-          onPress: () => updateProfile({ measurementUnit: 'metric' })
-        },
-        { 
-          text: "야드파운드법 (inch)", 
-          onPress: () => updateProfile({ measurementUnit: 'imperial' })
-        }
-      ]
-    );
+    Alert.alert('측정 단위 변경', '측정 단위를 선택해주세요', [
+      {text: '취소', style: 'cancel'},
+      {
+        text: '미터법 (cm, mm)',
+        onPress: () => updateProfile({measurementUnit: 'metric'}),
+      },
+      {
+        text: '야드파운드법 (inch)',
+        onPress: () => updateProfile({measurementUnit: 'imperial'}),
+      },
+    ]);
   };
 
   const handleContact = () => {
-    Alert.alert(
-      "문의하기",
-      "개발자에게 문의사항이나 제안을 보내시겠습니까?",
-      [
-        { text: "취소", style: "cancel" },
-        { text: "문의하기", onPress: () => console.log("문의하기 기능") }
-      ]
-    );
+    Alert.alert('문의하기', '개발자에게 문의사항이나 제안을 보내시겠습니까?', [
+      {text: '취소', style: 'cancel'},
+      {text: '문의하기', onPress: () => console.log('문의하기 기능')},
+    ]);
   };
 
   const updateProfile = async (updates: Partial<UserProfile>) => {
     try {
       await databaseManager.updateUserProfile(updates);
-      
+
       // 로컬 상태 업데이트
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
-      
+      setProfile(prev => (prev ? {...prev, ...updates} : null));
+
       Alert.alert('완료', '프로필이 업데이트되었습니다.');
     } catch (error) {
       console.error('프로필 업데이트 실패:', error);
@@ -115,16 +123,41 @@ const ProfileScreen: React.FC = () => {
     }
   };
 
+  // 패턴 업데이트 함수
+  const handlePatternUpdate = async () => {
+    try {
+      setUpdating(true);
+      console.log('🔄 패턴 데이터 업데이트 시작...');
+      await databaseManager.forceUpdatePatterns();
+
+      // 데이터베이스 버전 다시 로드
+      const dbVersion = await databaseManager.getSetting(
+        'pattern_data_version',
+      );
+      setDatabaseVersion(dbVersion || '없음');
+
+      Alert.alert(
+        '완료',
+        '새로운 패턴이 업데이트되었습니다! 패턴 탭에서 확인해보세요.',
+      );
+    } catch (error) {
+      console.error('패턴 업데이트 실패:', error);
+      Alert.alert('오류', '패턴 업데이트에 실패했습니다.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   // 개발/테스트용 데이터 초기화 함수
   const handleResetData = () => {
     Alert.alert(
-      "데이터 초기화",
-      "모든 데이터가 초기화됩니다. 정말 진행하시겠습니까?",
+      '데이터 초기화',
+      '모든 데이터가 초기화됩니다. 정말 진행하시겠습니까?',
       [
-        { text: "취소", style: "cancel" },
-        { 
-          text: "초기화", 
-          style: "destructive",
+        {text: '취소', style: 'cancel'},
+        {
+          text: '초기화',
+          style: 'destructive',
           onPress: async () => {
             try {
               await databaseManager.clearAllData();
@@ -134,9 +167,9 @@ const ProfileScreen: React.FC = () => {
               console.error('데이터 초기화 실패:', error);
               Alert.alert('오류', '데이터 초기화에 실패했습니다.');
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     );
   };
 
@@ -175,11 +208,10 @@ const ProfileScreen: React.FC = () => {
 
         {/* 프로필 섹션 */}
         <View style={styles.profileSection}>
-          <TouchableOpacity 
-            style={styles.avatarContainer} 
+          <TouchableOpacity
+            style={styles.avatarContainer}
             onPress={handleAvatarChange}
-            activeOpacity={0.7}
-          >
+            activeOpacity={0.7}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{profile.avatar}</Text>
             </View>
@@ -187,22 +219,20 @@ const ProfileScreen: React.FC = () => {
               <Text style={styles.editIconText}>✏️</Text>
             </View>
           </TouchableOpacity>
-          
+
           <View style={styles.profileInfo}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.editableField}
               onPress={handleNameChange}
-              activeOpacity={0.7}
-            >
+              activeOpacity={0.7}>
               <Text style={styles.userName}>{profile.name}</Text>
               <Text style={styles.editHint}>이름 변경</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
+
+            <TouchableOpacity
               style={styles.editableField}
               onPress={handleLevelChange}
-              activeOpacity={0.7}
-            >
+              activeOpacity={0.7}>
               <Text style={styles.userLevel}>{profile.level}</Text>
               <Text style={styles.editHint}>레벨 변경</Text>
             </TouchableOpacity>
@@ -211,13 +241,37 @@ const ProfileScreen: React.FC = () => {
 
         {/* 메뉴 섹션 */}
         <View style={styles.menuSection}>
-          <TouchableOpacity style={styles.menuItem} onPress={handleMeasurementUnitChange}>
+          <TouchableOpacity
+            style={[styles.menuItem, updating && styles.disabledMenuItem]}
+            onPress={handlePatternUpdate}
+            disabled={updating}>
+            <View style={styles.menuLeft}>
+              <Text style={styles.menuIcon}>📝</Text>
+              <View style={styles.menuText}>
+                <Text style={styles.menuTitle}>패턴 업데이트</Text>
+                <Text style={styles.menuDescription}>
+                  {updating ? '업데이트 중...' : '새로운 패턴 확인하기'}
+                </Text>
+              </View>
+            </View>
+            {updating ? (
+              <ActivityIndicator size="small" color="#6B73FF" />
+            ) : (
+              <Text style={styles.menuArrow}>›</Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleMeasurementUnitChange}>
             <View style={styles.menuLeft}>
               <Text style={styles.menuIcon}>📏</Text>
               <View style={styles.menuText}>
                 <Text style={styles.menuTitle}>측정 단위</Text>
                 <Text style={styles.menuDescription}>
-                  {profile.measurementUnit === 'metric' ? '미터법 (cm, mm)' : '야드파운드법 (inch)'}
+                  {profile.measurementUnit === 'metric'
+                    ? '미터법 (cm, mm)'
+                    : '야드파운드법 (inch)'}
                 </Text>
               </View>
             </View>
@@ -241,7 +295,9 @@ const ProfileScreen: React.FC = () => {
               <View style={styles.menuLeft}>
                 <Text style={styles.menuIcon}>🔄</Text>
                 <View style={styles.menuText}>
-                  <Text style={[styles.menuTitle, styles.dangerText]}>데이터 초기화</Text>
+                  <Text style={[styles.menuTitle, styles.dangerText]}>
+                    데이터 초기화
+                  </Text>
                   <Text style={styles.menuDescription}>개발/테스트용</Text>
                 </View>
               </View>
@@ -254,6 +310,9 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.appInfo}>
           <Text style={styles.appVersion}>StitchCraft v1.0.0</Text>
           <Text style={styles.dbInfo}>SQLite 연동</Text>
+          <Text style={styles.dbVersionInfo}>
+            패턴 DB 버전: {databaseVersion || '로딩중...'}
+          </Text>
         </View>
       </View>
     </SafeAreaView>
@@ -289,7 +348,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#DC2626',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
   },
   retryButton: {
     backgroundColor: '#6B73FF',
@@ -322,12 +381,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 32,
     paddingHorizontal: 24,
-    marginBottom: 20,
+    marginBottom: 30,
     borderRadius: 20,
     marginHorizontal: 16,
     elevation: 3,
     shadowColor: '#6B73FF',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.12,
     shadowRadius: 8,
     borderWidth: 1,
@@ -335,7 +394,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
     position: 'relative',
   },
   avatar: {
@@ -347,7 +406,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 2,
     shadowColor: '#6B73FF',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
@@ -366,7 +425,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 2,
     borderWidth: 2,
@@ -413,10 +472,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     marginHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: 30,
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.08,
     shadowRadius: 6,
     borderWidth: 1,
@@ -467,6 +526,9 @@ const styles = StyleSheet.create({
   dangerText: {
     color: '#DC2626',
   },
+  disabledMenuItem: {
+    opacity: 0.6,
+  },
   appInfo: {
     alignItems: 'center',
     paddingVertical: 24,
@@ -486,6 +548,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6B73FF',
     fontWeight: '500',
+  },
+  dbVersionInfo: {
+    fontSize: 12,
+    color: '#F59E0B',
+    fontWeight: '600',
+    marginTop: 4,
   },
 });
 

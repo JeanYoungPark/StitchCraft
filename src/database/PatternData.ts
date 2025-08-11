@@ -1,6 +1,120 @@
 // 패턴 데이터 분리 파일
 // 추후 JSON 파일이나 원격 API로 변경 가능
 
+import {YouTubeCreditInfo} from '../types/YouTubeCredit';
+
+// 패턴용 YouTube 크레딧 샘플 데이터
+const patternYouTubeCredits: Record<string, YouTubeCreditInfo> = {
+  'scarf-basic-tutorial': {
+    videoId: 'basic-scarf-tutorial',
+    videoUrl: 'https://youtube.com/watch?v=basic-scarf-tutorial',
+    title: '초보자를 위한 기본 목도리 만들기',
+    channel: {
+      name: '뜨개공방 StitchStudio',
+      handle: '@stitchstudio_kr',
+      url: 'https://www.youtube.com/@stitchstudio_kr',
+      verified: true,
+    },
+    duration: '25:30',
+    uploadDate: '2023-12-10',
+
+    licenseType: 'permission',
+    permissionDate: '2024-02-01',
+    licenseNotes: '초보자 대상 튜토리얼 사용 허가를 받았습니다.',
+
+    commercialUse: true,
+    productLinks: [
+      {
+        type: 'kit',
+        title: '목도리 만들기 키트',
+        description: '필요한 모든 재료가 포함된 완전 키트',
+        url: 'https://smartstore.naver.com/stitchstudio/products/scarf-kit',
+        price: '35,000',
+        currency: '원',
+        affiliate: false,
+      },
+      {
+        type: 'yarn',
+        title: '부드러운 울 터실',
+        description: '목도리에 적합한 고급 울 100%',
+        url: 'https://smartstore.naver.com/stitchstudio/products/wool-yarn',
+        price: '15,000',
+        currency: '원',
+        affiliate: false,
+      },
+    ],
+
+    creditRequired: true,
+    creditText:
+      '뜨개공방 StitchStudio의 상세한 가이드 덤분에 부드러운 목도리를 만들 수 있었어요! 감사합니다! 🎉',
+  },
+
+  'dishcloth-tutorial': {
+    videoId: 'crochet-dishcloth-guide',
+    videoUrl: 'https://youtube.com/watch?v=crochet-dishcloth-guide',
+    title: '실용적인 면행주 만들기 - 코바늘 튜토리얼',
+    channel: {
+      name: '손뜨개 마스터',
+      handle: '@handknit_master',
+      url: 'https://www.youtube.com/@handknit_master',
+      verified: false,
+    },
+    duration: '12:15',
+    uploadDate: '2023-11-20',
+
+    licenseType: 'permission',
+    permissionDate: '2024-01-30',
+    licenseNotes: '개인 채널의 실용적인 콘텐츠 사용 허가를 받았습니다.',
+
+    commercialUse: false,
+
+    creditRequired: true,
+    creditText: '손뜨개 마스터님의 실용적인 튜토리얼로 쉽게 따라할 수 있어요!',
+  },
+
+  'gloves-advanced': {
+    videoId: 'knitting-gloves-complete',
+    videoUrl: 'https://youtube.com/watch?v=knitting-gloves-complete',
+    title: '완벽한 장갑 뜨기 - 전문가 기법',
+    channel: {
+      name: 'K-니팅 아카데미',
+      handle: '@kknitting_academy',
+      url: 'https://www.youtube.com/@kknitting_academy',
+      verified: true,
+    },
+    duration: '45:20',
+    uploadDate: '2023-10-05',
+
+    licenseType: 'licensed',
+    permissionDate: '2024-02-15',
+    licenseNotes: '전문 기술 콘텐츠에 대한 정식 라이선스 계약을 체결했습니다.',
+
+    commercialUse: true,
+    productLinks: [
+      {
+        type: 'tools',
+        title: '전문가용 4개바늘 세트',
+        description: 'K-니팅 아카데미 전용 바늘',
+        url: 'https://kknitting.co.kr/products/4-needles-set',
+        price: '55,000',
+        currency: '원',
+        affiliate: true,
+      },
+      {
+        type: 'pattern',
+        title: '장갑 패턴 전문서',
+        description: '다양한 사이즈와 디자인의 장갑 패턴',
+        url: 'https://kknitting.co.kr/products/gloves-pattern-book',
+        price: '18,000',
+        currency: '원',
+        affiliate: true,
+      },
+    ],
+
+    creditRequired: true,
+  },
+};
+
 export interface PatternDataInterface {
   patternId: string;
   title: string;
@@ -10,162 +124,93 @@ export interface PatternDataInterface {
   materials: string[];
   steps: string[];
   emoji: string;
-  videoUrl?: string;
+  youtubeCredit?: YouTubeCreditInfo;
   hasImages?: boolean;
   hasPattern?: boolean;
 }
 
 export const defaultPatterns: PatternDataInterface[] = [
   {
-    patternId: 'scarf-basic',
-    title: '기본 목도리',
-    difficulty: '초급',
-    duration: '3시간',
-    description: '메리야스뜨기로 만드는 간단한 목도리입니다. 초보자도 쉽게 따라할 수 있어요.',
-    materials: [
-      '중간 굵기 털실 3볼 (약 300g)',
-      '대바늘 8mm 2개',
-      '가위',
-      '털실 바늘 (마무리용)'
-    ],
-    steps: [
-      '대바늘에 40코를 만들어주세요',
-      '1단: 모든 코를 메리야스뜨기로 떠주세요',
-      '2단: 모든 코를 안뜨기로 떠주세요',
-      '1-2단을 반복하여 원하는 길이까지 떠주세요 (약 150cm)',
-      '마지막에 코를 모두 빼고 실 끝을 정리해주세요'
-    ],
-    emoji: '🧣',
-    videoUrl: 'https://youtube.com/example-scarf',
-    hasImages: true,
-    hasPattern: false
-  },
-  {
-    patternId: 'dishcloth-basic',
-    title: '면행주',
-    difficulty: '초급',
-    duration: '1시간',
-    description: '초보자를 위한 사각형 행주 만들기입니다. 실용적이고 만들기 쉬워요.',
-    materials: [
-      '면실 1볼 (약 50g)',
-      '코바늘 5mm 1개',
-      '가위'
-    ],
-    steps: [
-      '슬립노트를 만들고 사슬 30코를 떠주세요',
-      '1단: 두 번째 사슬부터 한길긴뜨기를 29개 떠주세요',
-      '2단: 사슬 1코, 돌려서 한길긴뜨기 29개',
-      '2단을 반복하여 정사각형이 될 때까지 떠주세요',
-      '실 끝을 정리하고 완성해주세요'
-    ],
-    emoji: '🏠',
-    videoUrl: 'https://youtube.com/example-dishcloth',
-    hasImages: true,
-    hasPattern: true
-  },
-  {
-    patternId: 'gloves-basic',
-    title: '기본 장갑',
-    difficulty: '중급',
-    duration: '6시간',
-    description: '손가락이 있는 기본 겨울 장갑입니다. 약간의 경험이 필요해요.',
-    materials: [
-      '모직실 2볼 (약 100g)',
-      '대바늘 6mm 4개 (또는 원형바늘)',
-      '털실 바늘',
-      '가위',
-      '코마커 4개'
-    ],
-    steps: [
-      '손목 부분: 40코를 4개 바늘로 나누어 고무뜨기',
-      '손등과 손바닥 부분을 메리야스뜨기로 진행',
-      '엄지 부분: 8코를 따로 빼고 나머지 진행',
-      '각 손가락별로 코를 나누어 뜨기',
-      '엄지와 각 손가락을 완성하여 마무리'
-    ],
-    emoji: '🧤',
-    videoUrl: 'https://youtube.com/example-gloves',
-    hasImages: true,
-    hasPattern: true
-  },
-  // 추가 패턴들을 여기에 계속 추가할 수 있음
-  {
-    patternId: 'hat-beanie',
-    title: '기본 비니',
-    difficulty: '중급',
-    duration: '4시간',
-    description: '따뜻한 겨울 비니모자입니다. 원형뜨기를 연습할 수 있어요.',
-    materials: [
-      '모직실 2볼 (약 150g)',
-      '원형바늘 6mm 1개',
-      '4개바늘 6mm (마무리용)',
-      '코마커 1개',
-      '털실 바늘'
-    ],
-    steps: [
-      '원형바늘에 96코를 만들어 원형으로 이어주세요',
-      '고무뜨기 2/2로 5cm 정도 떠주세요',
-      '메리야스뜨기로 15cm 정도 떠주세요',
-      '줄임코를 시작하여 정수리 부분을 완성해주세요',
-      '실 끝을 정리하고 완성해주세요'
-    ],
-    emoji: '🧢',
-    videoUrl: 'https://youtube.com/example-beanie',
-    hasImages: true,
-    hasPattern: true
-  },
-  {
-    patternId: 'socks-basic',
-    title: '기본 양말',
+    patternId: 'pepe-frog-wallet',
+    title:
+      '킹받는💢 개구리 페페 지갑 만들기 Pepe the Frog Crochet Wallet Tutorial 🐸',
     difficulty: '고급',
-    duration: '8시간',
-    description: '발가락부터 뒤꿈치까지 완성하는 양말입니다. 고급 기술이 필요해요.',
-    materials: [
-      '양말실 1볼 (약 100g)',
-      '4개바늘 3.5mm 1세트',
-      '코마커 2개',
-      '털실 바늘',
-      '가위'
-    ],
-    steps: [
-      '발가락 부분부터 시작하여 8코 만들기',
-      '발등과 발바닥 부분을 늘려가며 뜨기',
-      '발목 부분까지 직선으로 뜨기',
-      '뒤꿈치 부분 줄임코와 늘림코로 성형',
-      '다리 부분을 고무뜨기로 마무리'
-    ],
-    emoji: '🧦',
-    videoUrl: 'https://youtube.com/example-socks',
+    duration: '3-4시간',
+    description: '',
+    materials: [],
+    steps: [],
+    emoji: '',
+    youtubeCredit: {
+      videoId: 'W-Jn4U3a90E',
+      videoUrl: 'https://www.youtube.com/watch?v=W-Jn4U3a90E&t=1s',
+      title:
+        '킹받는💢 개구리 페페 지갑 만들기 Pepe the Frog Crochet Wallet Tutorial 🐸',
+      channel: {
+        name: '코바늘 뜨개사 홀리',
+        handle: '',
+        url: '',
+        verified: false,
+      },
+      duration: '53:34',
+      uploadDate: '2023-04-06',
+
+      licenseType: 'permission',
+      permissionDate: '2025-08-11',
+      licenseNotes:
+        '홀리님으로부터 앱 내에서 원본 그대로 사용하는 조건으로 사용 허가를 받았습니다.',
+
+      commercialUse: false,
+      productLinks: [
+        {
+          type: 'book',
+          title: '홀리의 신간 도서',
+          description: '홀리님의 최신 뜨개질 도서',
+          url: '',
+          price: '',
+          currency: '',
+          affiliate: false,
+        },
+      ],
+    },
     hasImages: true,
-    hasPattern: true
-  }
+    hasPattern: false,
+  },
 ];
 
-// 카테고리별 패턴 분류 (추후 확장 가능)
+// 카테고리별 패턴 분류
 export const patternCategories = {
-  winter: ['scarf-basic', 'gloves-basic', 'hat-beanie'],
-  home: ['dishcloth-basic'],
-  clothing: ['socks-basic'],
-  beginner: ['scarf-basic', 'dishcloth-basic'],
-  intermediate: ['gloves-basic', 'hat-beanie'],
-  advanced: ['socks-basic']
+  winter: [],
+  home: ['pepe-frog-wallet'], // 생활용품/가방류
+  clothing: [],
+  beginner: [],
+  intermediate: [],
+  advanced: ['pepe-frog-wallet'],
 };
 
 // 패턴 검색 및 필터링 헬퍼 함수들
-export const getPatternsByDifficulty = (difficulty: '초급' | '중급' | '고급') => {
+export const getPatternsByDifficulty = (
+  difficulty: '초급' | '중급' | '고급',
+) => {
   return defaultPatterns.filter(pattern => pattern.difficulty === difficulty);
 };
 
-export const getPatternsByCategory = (category: keyof typeof patternCategories) => {
+export const getPatternsByCategory = (
+  category: keyof typeof patternCategories,
+) => {
   const patternIds = patternCategories[category];
-  return defaultPatterns.filter(pattern => patternIds.includes(pattern.patternId));
+  return defaultPatterns.filter(pattern =>
+    patternIds.includes(pattern.patternId),
+  );
 };
 
 export const searchPatterns = (query: string) => {
   const lowerQuery = query.toLowerCase();
-  return defaultPatterns.filter(pattern => 
-    pattern.title.toLowerCase().includes(lowerQuery) ||
-    pattern.description.toLowerCase().includes(lowerQuery) ||
-    pattern.materials.some(material => material.toLowerCase().includes(lowerQuery))
+  return defaultPatterns.filter(
+    pattern =>
+      pattern.title.toLowerCase().includes(lowerQuery) ||
+      pattern.description.toLowerCase().includes(lowerQuery) ||
+      pattern.materials.some(material =>
+        material.toLowerCase().includes(lowerQuery),
+      ),
   );
 };

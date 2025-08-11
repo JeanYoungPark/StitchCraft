@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {Text} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import TutorialScreen from '../screens/TutorialScreen';
 import PatternsScreen from '../screens/PatternsScreen';
@@ -36,7 +36,7 @@ export type TutorialStackParamList = {
 
 // Patterns Stack navigator type definition
 export type PatternsStackParamList = {
-  PatternsList: { initialFilter?: string } | undefined;
+  PatternsList: {initialFilter?: string} | undefined;
   PatternDetail: {
     patternId: string;
     title: string;
@@ -91,12 +91,8 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator
       screenOptions={{
         headerShown: false,
-      }}
-    >
-      <HomeStack.Screen
-        name="HomeMain"
-        component={HomeScreen}
-      />
+      }}>
+      <HomeStack.Screen name="HomeMain" component={HomeScreen} />
     </HomeStack.Navigator>
   );
 };
@@ -107,24 +103,14 @@ const TutorialStackNavigator = () => {
     <TutorialStack.Navigator
       screenOptions={{
         headerShown: false,
-      }}
-    >
-      <TutorialStack.Screen
-        name="TutorialMain"
-        component={TutorialScreen}
-      />
+      }}>
+      <TutorialStack.Screen name="TutorialMain" component={TutorialScreen} />
       <TutorialStack.Screen
         name="FirstKnitting"
         component={FirstKnittingScreen}
       />
-      <TutorialStack.Screen
-        name="YarnGuide"
-        component={YarnGuideScreen}
-      />
-      <TutorialStack.Screen
-        name="NeedleGuide"
-        component={NeedleGuideScreen}
-      />
+      <TutorialStack.Screen name="YarnGuide" component={YarnGuideScreen} />
+      <TutorialStack.Screen name="NeedleGuide" component={NeedleGuideScreen} />
       <TutorialStack.Screen
         name="BasicTechniques"
         component={BasicTechniquesScreen}
@@ -137,10 +123,7 @@ const TutorialStackNavigator = () => {
         name="KnittingTips"
         component={KnittingTipsScreen}
       />
-      <TutorialStack.Screen
-        name="FAQ"
-        component={FAQScreen}
-      />
+      <TutorialStack.Screen name="FAQ" component={FAQScreen} />
     </TutorialStack.Navigator>
   );
 };
@@ -151,12 +134,8 @@ const PatternsStackNavigator = () => {
     <PatternsStack.Navigator
       screenOptions={{
         headerShown: false,
-      }}
-    >
-      <PatternsStack.Screen
-        name="PatternsList"
-        component={PatternsScreen}
-      />
+      }}>
+      <PatternsStack.Screen name="PatternsList" component={PatternsScreen} />
       <PatternsStack.Screen
         name="PatternDetail"
         component={PatternDetailScreen}
@@ -171,20 +150,10 @@ const SettingsStackNavigator = () => {
     <SettingsStack.Navigator
       screenOptions={{
         headerShown: false,
-      }}
-    >
-      <SettingsStack.Screen
-        name="SettingsMain"
-        component={SettingsScreen}
-      />
-      <SettingsStack.Screen
-        name="Bookmarks"
-        component={BookmarksScreen}
-      />
-      <SettingsStack.Screen
-        name="Contact"
-        component={ContactScreen}
-      />
+      }}>
+      <SettingsStack.Screen name="SettingsMain" component={SettingsScreen} />
+      <SettingsStack.Screen name="Bookmarks" component={BookmarksScreen} />
+      <SettingsStack.Screen name="Contact" component={ContactScreen} />
       <SettingsStack.Screen
         name="PatternDetail"
         component={PatternDetailScreen}
@@ -231,8 +200,8 @@ export const AppNavigator: React.FC = () => {
         component={HomeStackNavigator}
         options={{
           title: '홈',
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 22, color, fontWeight: 'bold' }}>⌂</Text>
+          tabBarIcon: ({color}) => (
+            <Text style={{fontSize: 22, color, fontWeight: 'bold'}}>⌂</Text>
           ),
         }}
       />
@@ -241,8 +210,8 @@ export const AppNavigator: React.FC = () => {
         component={TutorialStackNavigator}
         options={{
           title: '튜토리얼',
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 22, color, fontWeight: 'bold' }}>◉</Text>
+          tabBarIcon: ({color}) => (
+            <Text style={{fontSize: 22, color, fontWeight: 'bold'}}>◉</Text>
           ),
         }}
       />
@@ -251,16 +220,16 @@ export const AppNavigator: React.FC = () => {
         component={PatternsStackNavigator}
         options={{
           title: '패턴',
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 22, color, fontWeight: 'bold' }}>⬟</Text>
+          tabBarIcon: ({color}) => (
+            <Text style={{fontSize: 22, color, fontWeight: 'bold'}}>⬟</Text>
           ),
         }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
+        listeners={({navigation}) => ({
+          tabPress: e => {
             // 패턴 탭을 누를 때마다 항상 PatternsList 화면으로 이동
             e.preventDefault(); // 기본 탭 동작을 막음
             navigation.navigate('Patterns', {
-              screen: 'PatternsList'
+              screen: 'PatternsList',
             });
           },
         })}
@@ -270,16 +239,16 @@ export const AppNavigator: React.FC = () => {
         component={SettingsStackNavigator}
         options={{
           title: '설정',
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 22, color, fontWeight: 'bold' }}>◎</Text>
+          tabBarIcon: ({color}) => (
+            <Text style={{fontSize: 22, color, fontWeight: 'bold'}}>◎</Text>
           ),
         }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
+        listeners={({navigation}) => ({
+          tabPress: e => {
             // 설정 탭을 누를 때마다 항상 SettingsMain 화면으로 이동
             e.preventDefault(); // 기본 탭 동작을 막음
             navigation.navigate('Settings', {
-              screen: 'SettingsMain'
+              screen: 'SettingsMain',
             });
           },
         })}

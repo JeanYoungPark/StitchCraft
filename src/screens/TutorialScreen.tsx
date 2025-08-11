@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, {useRef, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const TutorialScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -15,12 +15,12 @@ const TutorialScreen: React.FC = () => {
 
   // 스크롤을 맨 위로 이동하는 함수
   const scrollToTop = useCallback(() => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    scrollViewRef.current?.scrollTo({y: 0, animated: true});
   }, []);
 
   // 탭 이벤트 리스너 등록 - Tutorial 탭 클릭 시 항상 스크롤을 맨 위로
   useEffect(() => {
-    const unsubscribe = navigation.getParent()?.addListener('tabPress', (e) => {
+    const unsubscribe = navigation.getParent()?.addListener('tabPress', e => {
       // Tutorial 탭이 클릭되면 항상 스크롤을 맨 위로 이동
       if (e.target?.includes('Tutorial')) {
         // 약간의 지연을 두어 네비게이션이 완료된 후 스크롤
@@ -38,73 +38,75 @@ const TutorialScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>뜨개질 배우기</Text>
-          <Text style={styles.subtitle}>
-            기초부터 차근차근 배워보세요
-          </Text>
+          <Text style={styles.subtitle}>기초부터 차근차근 배워보세요</Text>
         </View>
 
         {/* Main Tutorial Sections */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>기본 과정</Text>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('FirstKnitting')}
-          >
+            onPress={() => navigation.navigate('FirstKnitting')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>🧶</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>첫 번째 뜨개질</Text>
-                  <Text style={styles.cardSubtitle}>3단계로 시작하는 기본 뜨기</Text>
+                  <Text style={styles.cardSubtitle}>
+                    3단계로 시작하는 기본 뜨기
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('YarnGuide')}
-          >
+            onPress={() => navigation.navigate('YarnGuide')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>🧵</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>실 종류 가이드</Text>
-                  <Text style={styles.cardSubtitle}>면실, 모직실, 아크릴실 종류와 특징</Text>
+                  <Text style={styles.cardSubtitle}>
+                    면실, 모직실, 아크릴실 종류와 특징
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('NeedleGuide')}
-          >
+            onPress={() => navigation.navigate('NeedleGuide')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>🪡</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>바늘 종류 가이드</Text>
-                  <Text style={styles.cardSubtitle}>대바늘, 코바늘, 원형바늘 종류와 용도</Text>
+                  <Text style={styles.cardSubtitle}>
+                    대바늘, 코바늘, 원형바늘 종류와 용도
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('BasicTechniques')}
-          >
+            onPress={() => navigation.navigate('BasicTechniques')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>📐</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>기본 기법 모음</Text>
-                  <Text style={styles.cardSubtitle}>코 만들기, 메리야스뜨기, 안뜨기 등</Text>
+                  <Text style={styles.cardSubtitle}>
+                    코 만들기, 메리야스뜨기, 안뜨기 등
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
@@ -115,49 +117,52 @@ const TutorialScreen: React.FC = () => {
         {/* Additional Resources */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>도움 자료</Text>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('KnittingDictionary')}
-          >
+            onPress={() => navigation.navigate('KnittingDictionary')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>📖</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>뜨개질 용어 사전</Text>
-                  <Text style={styles.cardSubtitle}>한국어-영어 뜨개질 용어 모음</Text>
+                  <Text style={styles.cardSubtitle}>
+                    한국어-영어 뜨개질 용어 모음
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('KnittingTips')}
-          >
+            onPress={() => navigation.navigate('KnittingTips')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>💡</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>뜨개질 팁 모음</Text>
-                  <Text style={styles.cardSubtitle}>실수하기 쉬운 부분과 해결 방법</Text>
+                  <Text style={styles.cardSubtitle}>
+                    실수하기 쉬운 부분과 해결 방법
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuCard}
-            onPress={() => navigation.navigate('FAQ')}
-          >
+            onPress={() => navigation.navigate('FAQ')}>
             <View style={styles.cardContent}>
               <View style={styles.cardLeft}>
                 <Text style={styles.cardEmoji}>❓</Text>
                 <View style={styles.cardText}>
                   <Text style={styles.cardTitle}>자주 묻는 질문</Text>
-                  <Text style={styles.cardSubtitle}>초보자가 궁금해하는 질문들</Text>
+                  <Text style={styles.cardSubtitle}>
+                    초보자가 궁금해하는 질문들
+                  </Text>
                 </View>
               </View>
               <Text style={styles.arrow}>›</Text>
@@ -213,7 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     elevation: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.05,
     shadowRadius: 2,
   },

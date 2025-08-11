@@ -9,6 +9,7 @@ StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니
 ## ✨ 주요 기능
 
 ### 🎯 현재 구현된 기능
+
 - ✅ **홈 화면** - StitchCraft 메인 페이지
 - ✅ **패턴 목록** - 패턴 브라우징 화면
 - ✅ **프로필** - 사용자 프로필 화면
@@ -18,6 +19,7 @@ StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니
 - ✅ **웹 지원** - 크로스 플랫폼 지원
 
 ### 🚀 계획된 기능
+
 - [ ] **도안 에디터** - 그리드 기반 도안 생성 도구
 - [ ] **패턴 카드** - 도안 목록 표시
 - [ ] **좋아요 시스템** - 패턴 좋아요 및 북마크
@@ -30,6 +32,7 @@ StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니
 ## 🛠️ 기술 스택
 
 ### Frontend
+
 - **React Native** - 크로스 플랫폼 모바일 앱
 - **Expo** - 개발 및 배포 플랫폼
 - **TypeScript** - 타입 안전성
@@ -38,6 +41,7 @@ StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니
 - **Redux Toolkit** - 상태 관리
 
 ### Backend (계획)
+
 - **Node.js + Express** - RESTful API 서버
 - **PostgreSQL** - 메인 데이터베이스
 - **AWS S3** - 이미지 파일 저장
@@ -46,6 +50,7 @@ StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니
 ## 🚀 시작하기
 
 ### 필요 조건
+
 - Node.js 16.x 이상
 - Expo CLI
 - iOS 시뮬레이터 또는 Android 에뮬레이터
@@ -100,6 +105,7 @@ StitchCraft/
 ## 🎨 디자인 시스템
 
 ### 색상 팔레트
+
 - **Primary**: #6B73FF (보라색)
 - **Secondary**: #FF6B9D (핑크색)
 - **Background**: #F5F5F5 (연한 회색)
@@ -107,6 +113,7 @@ StitchCraft/
 - **Text**: #2D3748 (어두운 회색)
 
 ### 스페이싱 시스템
+
 - **xs**: 4px
 - **sm**: 8px
 - **md**: 16px
@@ -117,11 +124,14 @@ StitchCraft/
 ## 📱 화면 구성
 
 ### 현재 화면들
+
 1. **홈 화면** (`src/screens/HomeScreen.tsx`)
+
    - 앱 소개 및 주요 액션 버튼
    - "패턴 만들기" CTA
 
 2. **패턴 화면** (`src/screens/PatternsScreen.tsx`)
+
    - 패턴 목록 표시 (추후 구현)
    - 검색 및 필터 기능 (추후 구현)
 
@@ -132,16 +142,19 @@ StitchCraft/
 ## 🔧 개발 가이드
 
 ### 새로운 화면 추가
+
 1. `src/screens/` 에 새 컴포넌트 생성
 2. `src/navigation/AppNavigator.tsx` 에 라우트 추가
 3. 필요한 경우 `src/types/index.ts` 에 타입 정의
 
 ### 새로운 컴포넌트 추가
+
 1. `src/components/` 에 컴포넌트 생성
 2. 테마 시스템 활용 (`src/theme/theme.ts`)
 3. TypeScript 타입 정의
 
 ### 상태 관리
+
 1. `src/redux/` 에 슬라이스 생성
 2. `src/redux/store.ts` 에 슬라이스 등록
 3. 컴포넌트에서 `useAppSelector`, `useAppDispatch` 사용
@@ -149,6 +162,7 @@ StitchCraft/
 ## 🚀 배포
 
 ### 웹 배포
+
 ```bash
 # 웹 빌드 생성
 npm run build
@@ -157,6 +171,7 @@ npm run build
 ```
 
 ### 모바일 앱 빌드
+
 ```bash
 # EAS CLI 설치
 npm install -g eas-cli

@@ -1,5 +1,5 @@
-import { knittingTermsData } from './KnittingDictionaryData';
-import { knittingTipsData } from './KnittingTipsData';
+import {knittingTermsData} from './KnittingDictionaryData';
+import {knittingTipsData} from './KnittingTipsData';
 
 export interface DailyTipItem {
   id: string;
@@ -7,7 +7,13 @@ export interface DailyTipItem {
   title: string;
   content: string;
   category?: string;
-  difficulty?: 'beginner' | 'intermediate' | 'advanced' | 'easy' | 'medium' | 'hard';
+  difficulty?:
+    | 'beginner'
+    | 'intermediate'
+    | 'advanced'
+    | 'easy'
+    | 'medium'
+    | 'hard';
   tags?: string[];
   icon: string;
 }
@@ -22,7 +28,7 @@ const convertDictionaryTerms = (): DailyTipItem[] => {
     category: term.category,
     difficulty: term.difficulty,
     tags: term.relatedTerms || [],
-    icon: getCategoryIcon(term.category)
+    icon: getCategoryIcon(term.category),
   }));
 };
 
@@ -36,7 +42,7 @@ const convertTipsData = (): DailyTipItem[] => {
     category: tip.category,
     difficulty: tip.difficulty,
     tags: [],
-    icon: getCategoryIcon(tip.category)
+    icon: getCategoryIcon(tip.category),
   }));
 };
 
@@ -49,7 +55,7 @@ const getCategoryIcon = (category: string): string => {
     technique: '⚖️',
     material: '🧵',
     beginner: '🎯',
-    problem: '🔧'
+    problem: '🔧',
   };
   return iconMap[category] || '💡';
 };
@@ -57,7 +63,7 @@ const getCategoryIcon = (category: string): string => {
 // 변환된 데이터를 합친 배열
 export const allDailyTips: DailyTipItem[] = [
   ...convertDictionaryTerms(),
-  ...convertTipsData()
+  ...convertTipsData(),
 ];
 
 /**
@@ -67,16 +73,16 @@ export const allDailyTips: DailyTipItem[] = [
 export const getDailyTip = (): DailyTipItem => {
   const today = new Date();
   const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-  
+
   // 날짜 문자열을 기반으로 시드 생성
   let seed = 0;
   for (let i = 0; i < dateString.length; i++) {
     seed = ((seed << 5) - seed + dateString.charCodeAt(i)) & 0xffffffff;
   }
-  
+
   // 시드를 기반으로 고정된 랜덤 인덱스 생성
   const randomIndex = Math.abs(seed) % allDailyTips.length;
-  
+
   return allDailyTips[randomIndex];
 };
 
@@ -85,12 +91,12 @@ export const getDailyTip = (): DailyTipItem => {
  */
 export const getTipForDate = (date: Date): DailyTipItem => {
   const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  
+
   let seed = 0;
   for (let i = 0; i < dateString.length; i++) {
     seed = ((seed << 5) - seed + dateString.charCodeAt(i)) & 0xffffffff;
   }
-  
+
   const randomIndex = Math.abs(seed) % allDailyTips.length;
   return allDailyTips[randomIndex];
 };
@@ -102,10 +108,10 @@ export const getTipCounts = () => {
   const dictionaryCount = knittingTermsData.length;
   const tipsCount = knittingTipsData.length;
   const totalCount = allDailyTips.length;
-  
+
   return {
     dictionary: dictionaryCount,
     tips: tipsCount,
-    total: totalCount
+    total: totalCount,
   };
 };
