@@ -1,60 +1,57 @@
-# StitchCraft 🧶
+# StitchCraft
 
-> 뜨개질 애호가들을 위한 React Native 앱 - 도안 생성, 공유, 발견 플랫폼
+> 뜨개질 애호가들을 위한 React Native 패턴 관리 앱
 
-## 🎯 프로젝트 소개
+## 프로젝트 개요
 
-StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니다. 나만의 도안을 만들고, 다른 사람들과 공유하며, 새로운 아이디어를 발견할 수 있는 플랫폼을 제공합니다.
+StitchCraft는 뜨개질을 사랑하는 사람들을 위한 모바일 앱입니다. YouTube 튜토리얼과 연계한 패턴 학습, 북마크 기능, 체계적인 뜨개질 가이드를 제공하는 올인원 뜨개질 플랫폼입니다.
 
-## ✨ 주요 기능
+## 주요 기능
 
-### 🎯 현재 구현된 기능
+### 구현 완료된 기능
 
-- ✅ **홈 화면** - StitchCraft 메인 페이지
-- ✅ **패턴 목록** - 패턴 브라우징 화면
-- ✅ **프로필** - 사용자 프로필 화면
-- ✅ **네비게이션** - 하단 탭 및 스택 네비게이션
-- ✅ **테마 시스템** - 일관된 디자인 시스템
-- ✅ **TypeScript** - 타입 안전성
-- ✅ **웹 지원** - 크로스 플랫폼 지원
+- **패턴 관리 시스템**: SQLite 기반 로컬 데이터베이스
+- **YouTube 통합**: 앱 내 YouTube 영상 재생 및 크리에이터 크레딧
+- **패턴 상세 페이지**: 난이도, 소요시간, 재료, 단계별 가이드
+- **북마크 시스템**: 관심 패턴 저장 및 관리
+- **뜨개질 튜토리얼**: 초보자를 위한 체계적인 학습 콘텐츠
+- **모바일 광고**: AdMob을 통한 수익화 준비
+- **4탭 네비게이션**: Home, Tutorial, Patterns, Settings
+- **오프라인 지원**: 로컬 데이터베이스로 네트워크 없이도 사용 가능
 
-### 🚀 계획된 기능
+### 현재 제공 중인 패턴
 
-- [ ] **도안 에디터** - 그리드 기반 도안 생성 도구
-- [ ] **패턴 카드** - 도안 목록 표시
-- [ ] **좋아요 시스템** - 패턴 좋아요 및 북마크
-- [ ] **검색 기능** - 패턴 검색 및 필터링
-- [ ] **사용자 인증** - 로그인/회원가입
-- [ ] **이미지 업로드** - 도안 이미지 관리
-- [ ] **댓글 시스템** - 패턴에 대한 피드백
-- [ ] **실/바늘 정보** - 재료 정보 관리
+- **페페 개구리 지갑**: 고급 난이도 (3-4시간)
+- **붕어빵 키링**: 초급 난이도 (1-2시간) - 홀리랜드 DIY키트
 
-## 🛠️ 기술 스택
+## 기술 스택
 
 ### Frontend
+- **React Native**: 크로스 플랫폼 모바일 앱 (CLI 기반)
+- **TypeScript**: 타입 안전성 및 개발 생산성
+- **React Navigation**: Stack & Bottom Tab 네비게이션
+- **React Native YouTube iframe**: YouTube 영상 통합
 
-- **React Native** - 크로스 플랫폼 모바일 앱
-- **Expo** - 개발 및 배포 플랫폼
-- **TypeScript** - 타입 안전성
-- **React Navigation** - 네비게이션 관리
-- **React Native Paper** - UI 컴포넌트 라이브러리
-- **Redux Toolkit** - 상태 관리
+### Database & Storage
+- **SQLite**: 로컬 데이터베이스
+- **React Native SQLite Storage**: 데이터 관리
+- **AsyncStorage**: 사용자 설정 저장
 
-### Backend (계획)
+### Additional Libraries
+- **React Native Google Mobile Ads**: AdMob 광고 통합
+- **React Native Safe Area Context**: 안전 영역 관리
+- **React Native Gesture Handler**: 제스처 처리
+- **React Native Vector Icons**: 아이콘 시스템
 
-- **Node.js + Express** - RESTful API 서버
-- **PostgreSQL** - 메인 데이터베이스
-- **AWS S3** - 이미지 파일 저장
-- **JWT** - 사용자 인증
-
-## 🚀 시작하기
+## 시작하기
 
 ### 필요 조건
 
 - Node.js 16.x 이상
-- Expo CLI
-- iOS 시뮬레이터 또는 Android 에뮬레이터
-- Expo Go 앱 (실제 기기 테스트용)
+- React Native CLI
+- iOS 시뮬레이터 (Mac) 또는 Android 에뮬레이터
+- Xcode (iOS 개발용, Mac만)
+- Android Studio (Android 개발용)
 
 ### 설치 및 실행
 
@@ -66,142 +63,156 @@ cd StitchCraft
 # 의존성 설치
 npm install
 
-# 개발 서버 시작
+# iOS 의존성 설치 (Mac만)
+cd ios && pod install && cd ..
+
+# Metro 서버 시작
 npm start
 
 # 플랫폼별 실행
 npm run android  # Android
-npm run ios      # iOS
-npm run web      # 웹 브라우저
+npm run ios       # iOS
 ```
 
-### 📱 모바일에서 테스트
-
-1. **Expo Go 앱 설치** (iOS/Android)
-2. **QR 코드 스캔** (터미널에 표시됨)
-3. **앱 실행 및 테스트**
-
-## 📁 프로젝트 구조
+## 프로젝트 구조
 
 ```
 StitchCraft/
-├── App.tsx                 # 메인 앱 컴포넌트
-├── package.json           # 프로젝트 설정
-├── app.json              # Expo 설정
-├── babel.config.js       # Babel 설정
-├── tsconfig.json         # TypeScript 설정
-├── eas.json             # EAS 빌드 설정
-└── src/
-    ├── components/      # 재사용 가능한 컴포넌트
-    ├── screens/         # 화면 컴포넌트
-    ├── navigation/      # 네비게이션 설정
-    ├── redux/          # Redux 상태 관리
-    ├── services/       # API 서비스
-    ├── theme/          # 테마 및 스타일
-    ├── types/          # TypeScript 타입 정의
-    └── utils/          # 유틸리티 함수
+├── App.tsx                     # 메인 앱 컴포넌트
+├── src/
+│   ├── components/             # 재사용 가능한 컴포넌트
+│   │   ├── AdBanner.tsx       # 광고 배너 컴포넌트
+│   │   └── YouTubeCreditCard.tsx # YouTube 크레딧 표시
+│   ├── database/              # 데이터베이스 관련
+│   │   ├── DatabaseManager.ts # SQLite 데이터베이스 관리
+│   │   └── PatternData.ts     # 패턴 데이터 정의
+│   ├── data/                  # 정적 데이터
+│   │   ├── DailyTipsData.ts   # 일일 팁 데이터
+│   │   └── KnittingDictionaryData.ts # 뜨개질 용어사전
+│   ├── navigation/            # 네비게이션 설정
+│   │   └── AppNavigator.tsx   # 메인 네비게이션
+│   ├── screens/               # 화면 컴포넌트
+│   │   ├── HomeScreen.tsx     # 홈 화면
+│   │   ├── PatternsScreen.tsx # 패턴 목록 화면
+│   │   ├── PatternDetailScreen.tsx # 패턴 상세 화면
+│   │   ├── BookmarksScreen.tsx # 북마크 화면
+│   │   ├── TutorialScreen.tsx # 튜토리얼 메인
+│   │   ├── SettingsScreen.tsx # 설정 화면
+│   │   └── ... (기타 튜토리얼 화면들)
+│   └── types/                 # TypeScript 타입 정의
+│       └── YouTubeCredit.ts   # YouTube 크레딧 타입
+├── android/                   # Android 프로젝트
+├── ios/                      # iOS 프로젝트
+└── package.json              # 프로젝트 설정
 ```
 
-## 🎨 디자인 시스템
+## 데이터베이스 설계
 
-### 색상 팔레트
+### 주요 테이블
 
-- **Primary**: #6B73FF (보라색)
-- **Secondary**: #FF6B9D (핑크색)
-- **Background**: #F5F5F5 (연한 회색)
-- **Surface**: #FFFFFF (흰색)
-- **Text**: #2D3748 (어두운 회색)
+- **patterns**: 패턴 정보 저장
+- **bookmarks**: 사용자 북마크 관리  
+- **app_settings**: 앱 설정 및 데이터 버전 관리
 
-### 스페이싱 시스템
+### 데이터 버전 관리
 
-- **xs**: 4px
-- **sm**: 8px
-- **md**: 16px
-- **lg**: 24px
-- **xl**: 32px
-- **xxl**: 48px
+- 자동 스키마 마이그레이션 시스템
+- 패턴 데이터 버전 관리 (현재 v1.0)
+- 설정에서 수동 패턴 업데이트 가능
 
-## 📱 화면 구성
+## 화면 구성
 
-### 현재 화면들
+### 4개 메인 탭
 
-1. **홈 화면** (`src/screens/HomeScreen.tsx`)
+1. **홈**: StitchCraft 소개 및 주요 기능 안내
+2. **튜토리얼**: 체계적인 뜨개질 학습 콘텐츠
+   - 첫 뜨개질
+   - 실 가이드
+   - 바늘 가이드  
+   - 기본 기법
+   - 뜨개질 사전
+   - 뜨개질 팁
+   - FAQ
+3. **패턴**: 패턴 목록 및 상세 정보
+   - 난이도별 필터링
+   - YouTube 영상 통합
+   - 관련 상품 정보
+4. **설정**: 앱 설정 및 사용자 기능
+   - 북마크 관리
+   - 패턴 데이터 업데이트
+   - 문의하기
 
-   - 앱 소개 및 주요 액션 버튼
-   - "패턴 만들기" CTA
+## 개발 프로세스
 
-2. **패턴 화면** (`src/screens/PatternsScreen.tsx`)
+### 코드 품질
 
-   - 패턴 목록 표시 (추후 구현)
-   - 검색 및 필터 기능 (추후 구현)
+- TypeScript strict 모드 사용
+- ESLint 및 Prettier 적용
+- 컴포넌트 기반 아키텍처
+- 에러 바운더리 및 예외 처리
 
-3. **프로필 화면** (`src/screens/ProfileScreen.tsx`)
-   - 사용자 정보 표시 (추후 구현)
-   - 내가 만든 패턴 목록 (추후 구현)
+### 성능 최적화
 
-## 🔧 개발 가이드
+- SQLite 쿼리 최적화
+- 이미지 레이지 로딩
+- React Navigation 최적화
+- 메모리 누수 방지
 
-### 새로운 화면 추가
+## 배포
 
-1. `src/screens/` 에 새 컴포넌트 생성
-2. `src/navigation/AppNavigator.tsx` 에 라우트 추가
-3. 필요한 경우 `src/types/index.ts` 에 타입 정의
-
-### 새로운 컴포넌트 추가
-
-1. `src/components/` 에 컴포넌트 생성
-2. 테마 시스템 활용 (`src/theme/theme.ts`)
-3. TypeScript 타입 정의
-
-### 상태 관리
-
-1. `src/redux/` 에 슬라이스 생성
-2. `src/redux/store.ts` 에 슬라이스 등록
-3. 컴포넌트에서 `useAppSelector`, `useAppDispatch` 사용
-
-## 🚀 배포
-
-### 웹 배포
-
+### 개발 환경
 ```bash
-# 웹 빌드 생성
-npm run build
+# 개발 서버 실행
+npm start
 
-# 빌드 결과물은 web-build/ 폴더에 생성됨
+# 디버그 빌드 생성
+npm run android:debug
+npm run ios:debug
 ```
 
-### 모바일 앱 빌드
-
+### 프로덕션 빌드
 ```bash
-# EAS CLI 설치
-npm install -g eas-cli
+# Android Release APK
+cd android && ./gradlew assembleRelease
 
-# EAS 로그인
-eas login
-
-# Android APK 빌드
-eas build --platform android --profile preview
-
-# iOS 빌드
-eas build --platform ios --profile preview
+# iOS Archive (Xcode 필요)
+# Xcode에서 Product > Archive
 ```
 
-## 🤝 기여하기
+## 기여하기
 
-1. 이 레포지토리를 Fork합니다
-2. 새로운 기능 브랜치를 생성합니다 (`git checkout -b feature/amazing-feature`)
-3. 변경사항을 커밋합니다 (`git commit -m '새로운 기능 추가'`)
-4. 브랜치에 푸시합니다 (`git push origin feature/amazing-feature`)
-5. Pull Request를 생성합니다
+1. Fork 후 feature 브랜치 생성
+2. 변경사항 커밋
+3. Pull Request 제출
 
-## 📄 라이센스
+### 개발 가이드라인
 
-이 프로젝트는 MIT 라이센스 하에 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+- TypeScript 타입 정의 필수
+- 컴포넌트는 함수형으로 작성
+- 에러 핸들링 필수
+- 사용자 경험을 최우선으로 고려
 
-## 🧶 StitchCraft 팀
+## 향후 계획
 
-뜨개질로 연결되는 세상을 만들어가고 있습니다!
+### 단기 목표
+- 패턴 데이터 확장 (50개 이상)
+- 검색 및 필터링 기능 강화
+- 패턴 카테고리별 분류 시스템
+
+### 중기 목표  
+- 소셜 기능 (패턴 공유, 커뮤니티)
+- 사용자 제작 패턴 업로드
+- 다국어 지원 (영어, 일본어)
+
+### 장기 목표
+- 프리미엄 구독 모델
+- AI 기반 패턴 추천
+- 웹 버전 출시
+
+## 라이센스
+
+MIT 라이센스 하에 배포됩니다.
 
 ---
 
-**StitchCraft** - 뜨개질로 연결되는 세상 🧶✨
+**StitchCraft** - 뜨개질로 연결되는 세상
